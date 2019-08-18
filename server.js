@@ -38,10 +38,11 @@ app.get("/api/hello", function (req, res) {
  *  {"unix": null, "utc" : "Invalid Date" }.
  * It is what you get from the date manipulation functions used above.
  */
-const isValidTime = (timeStr) => {};
+const isValidTime = (timeStr) => new Date(timeStr).toString() !== 'Invalid Date' || new Date(parseInt(timeStr) !== 'Invalid Date');
 
 app.route('/api/timestamp/:date_string?')
   .get((req, res) => {
+    req.query.dateString
     res.json()
   })
   ;
