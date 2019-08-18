@@ -104,7 +104,8 @@ const shortUrlSchema = new Schema({
   },
 });
 
-const Person = mongoose.model('ShortUrl', shortUrlSchema);
+const ShortUrl = mongoose.model('ShortUrl', shortUrlSchema);
+
 
 mongoose.connect(process.env.MONGO_URI);
 
