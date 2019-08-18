@@ -38,12 +38,18 @@ app.get("/api/hello", function (req, res) {
  *  {"unix": null, "utc" : "Invalid Date" }.
  * It is what you get from the date manipulation functions used above.
  */
-const isValidTime = (timeStr) => new Date(timeStr).toString() !== 'Invalid Date' || new Date(parseInt(timeStr) !== 'Invalid Date');
+const isValidTime = (timeStr) => new Date(timeStr).toString() !== 'Invalid Date' || new Date(parseInt(timeStr, 10) !== 'Invalid Date');
 
-app.route('/api/timestamp/:date_string?')
+app.route('/api/timestamp/:date_string')
   .get((req, res) => {
-    req.query.dateString
-    res.json()
+    const timeStr = req.params.date_string;
+    console.log('tiomestr',timeStr);
+    const date = new Date();
+    const dateResponse = {
+      unix: date.getTime(),
+      utc: date.toUTCString(),
+    };
+    res.json(dateResponse)
   })
   ;
 
