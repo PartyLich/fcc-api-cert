@@ -2,8 +2,11 @@
 // where your node app starts
 
 // init project
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
+
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC 
@@ -24,7 +27,7 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-/**
+/** Timestamp microservice
  * A date string is valid if can be successfully parsed by new Date(date_string) (JS) . 
  * Note that the unix timestamp needs to be an integer (not a string) specifying milliseconds.
  * In our test we will use date strings compliant with ISO-8601 (e.g. "2016-11-20") because this 
@@ -70,10 +73,11 @@ const serveTimestamp = (req, res) => {
 app.route('/api/timestamp/:date_string?')
   .get(parseDate, serveTimestamp);
 
-//
-// [base url]/api/whoami
-// {"ipaddress":"159.20.14.100","language":"en-US,en;q=0.5",
-// "software":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0"}
+/** Whoami microservice
+ * [base url]/api/whoami
+ * {"ipaddress":"159.20.14.100","language":"en-US,en;q=0.5",
+ * "software":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0"}
+ */
 app.route('/api/whoami')
   .get((req, res) => {
     const whoamiResp = {
@@ -85,13 +89,50 @@ app.route('/api/whoami')
     res.json(whoamiResp);
   });
 
-// url shortener
-///api/shorturl/new
+/** url shortener microservice
+ * /api/shorturl/new
+ */
+// url db schema/model
+const shortUrlSchema = new Schema({
+  url: {
+    type: String,
+    required: true,
+  },
+  id: {
+    type: Number,
+    required: true,
+  },
+});
 
+const Person = mongoose.model('ShortUrl', shortUrlSchema);
+
+mongoose.connect(process.env.MONGO_URI);
+
+const validateUrl = (req, res, next) => {
+  next();
+};
+const createShortUrl = (req, res, next) => {
+  next();
+};
+const sendShortUrl = (req, res) => {
+  const shortUrl = {};
+  res.json(shortUrl);
+};
+// get short url from database by id
+const lookupShortUrl = (req, res, next) => {
+  const urlId = req.params.url_id;
+  // const shortUrl = ''
+  next();
+};
+const redirectToUrl = (req, res) => {
+  const shortUrl = '';
+  
+  res.redirect(shortUrl);
+};
 
 app
   .route('/api/shorturl/new')
-  .post(validateUrl, saveShortUrl, sendShortUrl);
+  .post(validateUrl, createShortUrl, sendShortUrl);
 app
   .route('/api/shorturl/:url_id')
   .get(lookupShortUrl, redirectToUrl);
