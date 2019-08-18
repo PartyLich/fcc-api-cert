@@ -68,8 +68,7 @@ const serveTimestamp = (req, res) => {
   };
 
 app.route('/api/timestamp/:date_string?')
-  .get(parseDate, serveTimestamp)
-  ;
+  .get(parseDate, serveTimestamp);
 
 //
 // [base url]/api/whoami
@@ -78,12 +77,24 @@ app.route('/api/timestamp/:date_string?')
 app.route('/api/whoami')
   .get((req, res) => {
     const whoamiResp = {
-      
+      ipaddress: `${req.ip}`,
+      language: `${req.get('accept-language')}`,
+      software: `${req.get('user-agent')}`,      
     };
-    res.json(whoamiResp)
-  })
-  ;
+  
+    res.json(whoamiResp);
+  });
 
+// url shortener
+///api/shorturl/new
+
+
+app
+  .route('/api/shorturl/new')
+  .post(validateUrl, saveShortUrl, sendShortUrl);
+app
+  .route('/api/shorturl/:url_id')
+  .get(lookupShortUrl, redirectToUrl);
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
