@@ -45,28 +45,29 @@ const formatDate = (date) => ({
       unix: date.getTime(),
       utc: date.toUTCString(),
     });
-
-app.route('/api/timestamp/:date_string')
-  .get((req, res) => {
-    const timeStr = req.params.date_string;
-    console.log('tiomestr',timeStr);
-    if(timeStr === '') {
-      const date = new Date();
-      const dateResponse = formatDate(date);
-      return res.json(dateResponse);
-    }
-    
-    if(isValidTime(timeStr)) {      
-      const date = (reIso8601.test(timeStr)) ? new Date(timeStr) : new Date(parseInt(timeStr));
-      const dateResponse = formatDate(date);
-      res.json(dateResponse)
-    } else {
-      const date = new Date('x');
-      const dateResponse = formatDate(date);
-      res.json(dateResponse)
-    }  
+function middleTest(req, res, next) {
+  const timeStr = req.params.date_string;
   
-  })
+    let date;
+    
+    if(!timeStr) {
+      date = new Date();
+    } else if(isValidTime(timeStr)) {      
+      date = (reIso8601.test(timeStr)) ? new Date(timeStr) : new Date(parseInt(timeStr));      
+    } else {
+      date = new Date('x');
+    } 
+  
+  req.date = date;
+  next();
+}
+const serveTimestamp = (req, res) => {
+    const dateResponse = formatDate(req.date);
+    res.json(dateResponse);      
+  };
+
+app.route('/api/timestamp/:date_string?')
+  .get(middleTest, )
   ;
 
 
