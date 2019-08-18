@@ -40,36 +40,49 @@ app.get("/api/hello", function (req, res) {
  */
 const reIso8601 = /^\d{4}-\d{2}-\d{2}$/;
 const reDigits = /^\d*$/;
-const isValidTime = (timeStr) => reIso8601.test(timeStr) || reDigits.test(timeStr);
 const formatDate = (date) => ({
       unix: date.getTime(),
       utc: date.toUTCString(),
     });
-function middleTest(req, res, next) {
-  const timeStr = req.params.date_string;
-  
-    let date;
+const parseDate = function middleTest(req, res, next) {
+  const timeStr = req.params.date_string;  
+  let date;
     
-    if(!timeStr) {
-      date = new Date();
-    } else if(isValidTime(timeStr)) {      
-      date = (reIso8601.test(timeStr)) ? new Date(timeStr) : new Date(parseInt(timeStr));      
-    } else {
-      date = new Date('x');
-    } 
+  date = (!timeStr) 
+    ? new Date()
+    : (reIso8601.test(timeStr))
+      ? new Date(timeStr) 
+      : reDigits.test(timeStr) 
+        ? new Date(parseInt(timeStr)) 
+        : new Date('x')
+    ;   
   
   req.date = date;
   next();
+  return date;
 }
 const serveTimestamp = (req, res) => {
     const dateResponse = formatDate(req.date);
-    res.json(dateResponse);      
+    res.json(dateResponse);
+    return dateResponse;
   };
 
 app.route('/api/timestamp/:date_string?')
-  .get(middleTest, )
+  .get(parseDate, serveTimestamp)
   ;
 
+//
+// [base url]/api/whoami
+// {"ipaddress":"159.20.14.100","language":"en-US,en;q=0.5",
+// "software":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0"}
+app.route('/api/whoami')
+  .get((req, res) => {
+    const whoamiResp = {
+      
+    };
+    res.json(whoamiResp)
+  })
+  ;
 
 
 // listen for requests :)
