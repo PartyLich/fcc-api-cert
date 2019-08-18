@@ -38,18 +38,34 @@ app.get("/api/hello", function (req, res) {
  *  {"unix": null, "utc" : "Invalid Date" }.
  * It is what you get from the date manipulation functions used above.
  */
-const isValidTime = (timeStr) => new Date(timeStr).toString() !== 'Invalid Date' || new Date(parseInt(timeStr, 10) !== 'Invalid Date');
+const reIso8601 = /^\d{4}-\d{2}-\d{2}$/;
+const reDigits = /^\d*$/;
+const isValidTime = (timeStr) => reIso8601.test(timeStr) || reDigits.test(timeStr);
+const formatDate = (date) => ({
+      unix: date.getTime(),
+      utc: date.toUTCString(),
+    });
 
 app.route('/api/timestamp/:date_string')
   .get((req, res) => {
     const timeStr = req.params.date_string;
     console.log('tiomestr',timeStr);
-    const date = new Date();
-    const dateResponse = {
-      unix: date.getTime(),
-      utc: date.toUTCString(),
-    };
-    res.json(dateResponse)
+    if(timeStr === '') {
+      const date = new Date();
+      const dateResponse = formatDate(date);
+      return res.json(dateResponse);
+    }
+    
+    if(isValidTime(timeStr)) {      
+      const date = (reIso8601.test(timeStr)) ? new Date(timeStr) : new Date(parseInt(timeStr));
+      const dateResponse = formatDate(date);
+      res.json(dateResponse)
+    } else {
+      const date = new Date('x');
+      const dateResponse = formatDate(date);
+      res.json(dateResponse)
+    }  
+  
   })
   ;
 
