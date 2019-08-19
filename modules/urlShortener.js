@@ -41,9 +41,10 @@ mongoose.connect(process.env.MONGO_URI);
 /**
  * @param {Object} an error object
  */
-const genericErrorHandler = (err) => {
+const genericErrorHandler = (callback) => (err) => {
       // handle database error
       console.error(err.toString());
+      callback(err);
   };
 
 const reStripProtocol = /^(http(s)?:\/\/)?(.*)$/i;
@@ -70,7 +71,8 @@ const validateUrl = (req, res, next) => {
 };
 
 
-const getShortUrlStr = (id) => `/api/shorturl/${id}`;
+// const getShortUrlStr = (id) => `/api/shorturl/${id}`;
+const getShortUrlStr = (id) => `${id}`;
 const getShortUrlObj = (longUrl, shortUrl) => ({
     original_url: longUrl,
     short_url: shortUrl,
@@ -85,8 +87,9 @@ const createOrReturnShortUrl = (req, res, next) => {
   if(req.invalid) return next();
   console.log(`req.invalid ${req.invalid}`);
   
-  // const longUrl = req.body.url;
-  const longUrl = 'www.google.com';
+  const errorHandler = genericErrorHandler(next);
+  const longUrl = req.body.url;
+  // const longUrl = 'www.google.com';
   
   // check existence
   const query = {url: longUrl};
@@ -94,38 +97,31 @@ const createOrReturnShortUrl = (req, res, next) => {
     .then((exists) => {
       if(exists) {
         console.info(`${longUrl} exists`);
-        // return existing shortUrl
-        const shortUrlDoc = ShortUrl.findOne(query);
-        // const id = shortUrlDoc._id;
-        // const shortUrlString = getShortUrlStr(id);
-        const shortUrlString = getShortUrlStr(shortUrlDoc._id);
+//         // return existing shortUrl
+//         const shortUrlDoc = ShortUrl.findOne(query);
+//         // const id = shortUrlDoc._id;
+//         // const shortUrlString = getShortUrlStr(id);
+//         const shortUrlString = getShortUrlStr(shortUrlDoc.id);
         
-        req.shortUrl = getShortUrlObj(shortUrlDoc.url, shortUrlString);
-        return next();
+//         req.shortUrl = getShortUrlObj(shortUrlDoc.url, shortUrlString);
+//         console.log('extant shortUrlObj: ' + JSON.stringify(req.shortUrl));
+//         return next();
+        console.info(`deleting ${longUrl}`);
+        ShortUrl.deleteOne(query);
       } 
     
       console.info(`creating new shorturl for ${longUrl}`);
       createShortUrl(longUrl)
           .then((document) => {
-            const shortUrlString = getShortUrlStr(document._id);
+            const shortUrlString = getShortUrlStr(document.id);
           
             req.shortUrl = getShortUrlObj(document.url, shortUrlString);
-          console.log(JSON.Stringify(req.shortUrl));
+            console.log('new shortUrlObj: ' + JSON.stringify(req.shortUrl));
             return next();
           })
-          .catch(genericErrorHandler);
+          .catch(errorHandler);
     })
-    .catch(genericErrorHandler);
-    
-  
-  // let shortUrl = '1';
-  
-  
-  // req.shortUrl = {
-  //   original_url: longUrl,
-  //   short_url: shortUrl,
-  // };
-  next();
+    .catch(errorHandler);
 };
 
 /** send json response
@@ -135,15 +131,27 @@ const sendShortUrl = (req, res) => {
   
   if(req.invalid) res.json(invalidUrl);
   const shortUrl = req.shortUrl;
-  // const shortUrl = {"original_url":"www.google.com","short_url":1};
+  
+  console.log(`sending ${JSON.stringify(shortUrl)}`);
   res.json(shortUrl);
 };
 
 // get short url from database by id
 const lookupShortUrl = (req, res, next) => {
-  const urlId = req.params.url_id;
+  const userUrlId = req.params.url_id;
   // sanitize
+  const urlId = userUrlId;
   
+  ShortUrl.findById(urlId)
+    .exec((err, document) => {
+      if(err) { 
+        return next(err);
+      }
+      
+      req.longUrl = document.url;
+      console.log(`found ${req.longUrl}`);
+      return next();
+    });
   //
 // ShortUrl.find({url: req.body.url}, (err, data) => {
 //   if(err) return next();
@@ -151,7 +159,8 @@ const lookupShortUrl = (req, res, next) => {
 //   
 // });
   // const shortUrl = ''
-  next();
+  
+  // next();
 };
 
 /** send redirect to long url
