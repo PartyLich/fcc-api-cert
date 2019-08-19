@@ -57,54 +57,31 @@ const {whoami} = require('./modules/whoami');
 app.route('/api/whoami')
   .get(whoami);
 
+
 /** url shortener microservice
  * /api/shorturl/new
  */
-// url db schema/model
-const shortUrlSchema = new Schema({
-  url: {
-    type: String,
-    required: true,
-  },
-  id: {
-    type: Number,
-    required: true,
-  },
-});
+const shortUrl = require('./modules/urlShortener');
 
-const ShortUrl = mongoose.model('ShortUrl', shortUrlSchema);
-
-
-mongoose.connect(process.env.MONGO_URI);
-
-const validateUrl = (req, res, next) => {
-  next();
-};
-const createShortUrl = (req, res, next) => {
-  next();
-};
-const sendShortUrl = (req, res) => {
-  const shortUrl = {};
-  res.json(shortUrl);
-};
-// get short url from database by id
-const lookupShortUrl = (req, res, next) => {
-  const urlId = req.params.url_id;
-  // const shortUrl = ''
-  next();
-};
-const redirectToUrl = (req, res) => {
-  const shortUrl = '';
-  
-  res.redirect(shortUrl);
-};
+const { validateUrl } = shortUrl;
+const { createShortUrl } = shortUrl;
+const { sendShortUrl } = shortUrl;
+const { lookupShortUrl } = shortUrl;
+const { redirectToUrl } = shortUrl;
 
 app
   .route('/api/shorturl/new')
-  .post(validateUrl, createShortUrl, sendShortUrl);
+  .post(
+      validateUrl,
+      createShortUrl,
+      sendShortUrl
+   );
 app
   .route('/api/shorturl/:url_id')
-  .get(lookupShortUrl, redirectToUrl);
+  .get(
+      lookupShortUrl,
+      redirectToUrl
+  );
 
 
 // listen for requests :)
