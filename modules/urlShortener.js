@@ -38,55 +38,28 @@ mongoose.connect(process.env.MONGO_URI);
 
 
 const reStripProtocol = /^(http(s)?:\/\/)?(.*)$/i;
-const stripProtocol = (url) => reStripProtocol.match(url)[3];
+const stripProtocol = (url) => url.match(reStripProtocol)[3];
 
 /** validate long url provided by user
  */
 const validateUrl = (req, res, next) => {
-  // const longUrl = req.body.url;
-  const longUrl = 'www.freecodecamp.org';
+  const longUrl = stripProtocol(req.body.url);
+  // const longUrl = stripProtocol('www.freecodecamp.org');
   const dns = require('dns');
   const dnsPromises = require('dns').promises;
   
-  console.info('longUrl: ' + longUrl);
-  // dnsPromises.lookup(longUrl)
-  //   .then((data)=> {
-  //     console.log('lookup success');
-  //     req.invalid = false;
-  //     next();
-  //   })
-  //   .catch((err) => {
-  //     console.info('lookup fail: ' + err.toString());
-  //     req.invalid = true;
-  //     next();
-  //   });
-  const { Resolver } = require('dns');
-  const resolver = new Resolver();
-  resolver.setServers(['8.8.4.4', '8.8.8.8']);
-  
-  resolver.resolve(longUrl, (err, data) => {
-    if(err) {      
+  // console.info('longUrl: ' + longUrl);
+  dnsPromises.lookup(longUrl)
+    .then((data)=> {
+      console.log('lookup success');
+      req.invalid = false;
+      next();
+    })
+    .catch((err) => {
       console.info('lookup fail: ' + err.toString());
       req.invalid = true;
-      return next();
-    }
-    
-    console.log('lookup success');
-    req.invalid = false;
-    next();
-  });
-  
-//   dns.lookup(longUrl, (err, data) => {
-//     if(err) {
-//       console.info('lookup fail: ' + err.toString());
-//       req.invalid = true;
-//       return next();
-//     }
-    
-//     console.log('lookup success');
-//     req.invalid = false;
-//     next();
-//   })
+      next();
+    });
 };
 
 /**
@@ -128,10 +101,11 @@ const lookupShortUrl = (req, res, next) => {
 
 const redirectToUrl = (req, res) => {
   // const shortUrl = 'https://fcc-timestamp-microservice-x.glitch.me/'
-  const shortUrl = ''
+  const longUrl = ''
       + '/api/whoami';
   
-  res.redirect(shortUrl);
+  console.log('redirecting');
+  res.redirect(longUrl);
 };
 
 module.exports = {
