@@ -85,6 +85,16 @@ app
       redirectToUrl
   );
 
+/** counter for link shortener
+ */
+const { getNextId } = require('./modules/idService');
+
+app
+  .route('/priv/idService/new')
+  .get(
+    getNextId
+  );
+
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {

@@ -34,14 +34,6 @@ const shortUrlSchema = new Schema({
 });
 const ShortUrl = mongoose.model('ShortUrl', shortUrlSchema);
 
-const counterSchema = new Schema({
-  count: {
-    type: Number,
-    required: true,
-  }
-});
-const Counter = mongoose.model('Counter', counterSchema);
-
 
 mongoose.connect(process.env.MONGO_URI);
 
