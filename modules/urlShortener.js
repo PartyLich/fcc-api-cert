@@ -1,5 +1,14 @@
 /** url shortener microservice
  * /api/shorturl/new
+ * 1. I can POST a URL to [project_url]/api/shorturl/new and I will receive a
+ * shortened URL in the JSON response.
+ *   e.g  {"original_url":"www.google.com","short_url":1}
+ * 2. If I pass an invalid URL that doesn't follow the
+ * http(s)://www.example.com(/more/routes) format, the JSON response will 
+ * contain an error like {"error":"invalid URL"}
+ * HINT: to be sure that the submitted url points to a valid site you can 
+ * use the function dns.lookup(host, cb) from the dns core module.
+ * 3. When I visit the shortened URL, it will redirect me to my original link.
  */
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
@@ -29,7 +38,7 @@ mongoose.connect(process.env.MONGO_URI);
 const validateUrl = (req, res, next) => {
   const longUrl = req.body.url;
   
-  req.invalid = false;
+  req.invalid = true;
   
   next();
 };
@@ -38,7 +47,7 @@ const validateUrl = (req, res, next) => {
  */
 const createShortUrl = (req, res, next) => {
   if(req.invalid) return next();
-  
+  console.log(`req.invalid ${req.invalid}`);
   ShortUrl.find();
   
   // const original_url = req.body.url;
