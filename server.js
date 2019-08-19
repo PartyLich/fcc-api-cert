@@ -70,6 +70,10 @@ const serveTimestamp = (req, res) => {
     return dateResponse;
   };
 
+const timeStamp = require('./modules/timeStamp');
+console.log(timeStamp);
+// 
+
 app.route('/api/timestamp/:date_string?')
   .get(parseDate, serveTimestamp);
 
