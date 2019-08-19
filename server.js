@@ -5,8 +5,10 @@
 const express = require('express');
 const app = express();
 
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+// const mongoose = require('mongoose');
+// const Schema = mongoose.Schema;
+
+const bodyParser = require('body-parser');
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC 
@@ -15,6 +17,9 @@ app.use(cors({optionSuccessStatus: 200}));  // some legacy browsers choke on 204
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
+
+// body parser middleware
+app.use(bodyParser.urlEncoded());
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (req, res) {
@@ -62,7 +67,6 @@ app.route('/api/whoami')
  * /api/shorturl/new
  */
 const shortUrl = require('./modules/urlShortener');
-
 const { validateUrl } = shortUrl;
 const { createShortUrl } = shortUrl;
 const { sendShortUrl } = shortUrl;

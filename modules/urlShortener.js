@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
+
+
 // url db schema/model
 const shortUrlSchema = new Schema({
   url: {
@@ -22,17 +24,34 @@ const ShortUrl = mongoose.model('ShortUrl', shortUrlSchema);
 
 mongoose.connect(process.env.MONGO_URI);
 
+/** validate long url provided by user
+ */
 const validateUrl = (req, res, next) => {
+  const longUrl = req.query.;
   next();
 };
 
+/**
+ */
 const createShortUrl = (req, res, next) => {
   ShortUrl.find();
+  
+  let original_url = 'www.google.com';
+  let short_url = '1';
+  
+  
+  req.shortUrl = {
+    original_url,
+    short_url,
+  };
   next();
 };
 
+/** send json response
+ */ 
 const sendShortUrl = (req, res) => {
-  const shortUrl = {};
+  // const shortUrl = req.shortUrl;
+  const shortUrl = {"original_url":"www.google.com","short_url":1};
   res.json(shortUrl);
 };
 
