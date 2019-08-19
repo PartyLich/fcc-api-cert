@@ -96,28 +96,27 @@ const createOrReturnShortUrl = (req, res, next) => {
         console.info(`${longUrl} exists`);
         // return existing shortUrl
         const shortUrlDoc = ShortUrl.findOne(query);
-        const id = shortUrlDoc._id;
-        const shortUrlString = getShortUrlStr(id);
+        // const id = shortUrlDoc._id;
+        // const shortUrlString = getShortUrlStr(id);
+        const shortUrlString = getShortUrlStr(shortUrlDoc._id);
+        
         req.shortUrl = getShortUrlObj(shortUrlDoc.url, shortUrlString);
         return next();
       } 
     
-      console.info('creating new shorturl')
+      console.info(`creating new shorturl for ${longUrl}`);
       createShortUrl(longUrl)
           .then((document) => {
             const shortUrlString = getShortUrlStr(document._id);
+          
             req.shortUrl = getShortUrlObj(document.url, shortUrlString);
+          console.log(JSON.Stringify(req.shortUrl));
             return next();
           })
           .catch(genericErrorHandler);
     })
     .catch(genericErrorHandler);
-  // ShortUrl.find({url: req.body.url}, (err, data) => {
-//   if(err) return next();
-//   
-//   
-// });
-  
+    
   
   // let shortUrl = '1';
   
@@ -168,7 +167,7 @@ const redirectToUrl = (req, res) => {
 
 module.exports = {
   validateUrl,
-  createShortUrl,
+  createOrReturnShortUrl,
   sendShortUrl,
   
   lookupShortUrl,

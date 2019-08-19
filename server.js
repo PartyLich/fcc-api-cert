@@ -64,7 +64,7 @@ app.route('/api/whoami')
  */
 const shortUrl = require('./modules/urlShortener');
 const { validateUrl } = shortUrl;
-const { createShortUrl } = shortUrl;
+const { createOrReturnShortUrl } = shortUrl;
 const { sendShortUrl } = shortUrl;
 const { lookupShortUrl } = shortUrl;
 const { redirectToUrl } = shortUrl;
@@ -73,7 +73,7 @@ app
   .route('/api/shorturl/new')
   .post(
       validateUrl,
-      createShortUrl,
+      createOrReturnShortUrl,
       sendShortUrl
    )
   .get((req, res) => res.sendFile(__dirname + '/views/urlShortener.html'));
