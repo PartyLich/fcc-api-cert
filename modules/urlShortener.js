@@ -3,8 +3,8 @@
  * 1. I can POST a URL to [project_url]/api/shorturl/new and I will receive a
  * shortened URL in the JSON response.
  *   e.g  {"original_url":"www.google.com","short_url":1}
- [] check for url existence in db
- [] create if DNE
+ [x] check for url existence in db
+ [x] create if DNE
  [x] return formatted response
  * 2. If I pass an invalid URL that doesn't follow the
  * http(s)://www.example.com(/more/routes) format, the JSON response will 
@@ -14,7 +14,7 @@
  * HINT: to be sure that the submitted url points to a valid site you can 
  * use the function dns.lookup(host, cb) from the dns core module.
  * 3. When I visit the shortened URL, it will redirect me to my original link.
-  [] retrieve full url
+  [x] retrieve full url
   [x] redirect
  */
 const mongoose = require('mongoose');
@@ -106,7 +106,7 @@ const createOrReturnShortUrl = (req, res, next) => {
     .then((exists) => {
       if(exists) {
         console.info(`${longUrl} exists`);
-//         // return existing shortUrl
+        // return existing shortUrl
 //         const shortUrlDoc = ShortUrl.findOne(query);
 //         // const id = shortUrlDoc._id;
 //         // const shortUrlString = getShortUrlStr(id);
@@ -154,12 +154,14 @@ const lookupShortUrl = (req, res, next) => {
   ShortUrl.findById(urlId)
     .exec((err, document) => {
       if(err) {
+        console.log('findbyId error');
         req.invalid = true;
-        return next(err);
+        // return next(err);
+        return next();
       }
       
       req.longUrl = document.url;
-      console.log(`found ${req.longUrl}`);
+      console.log(`lookup found ${req.longUrl}`);
       return next();
     });
 };
@@ -168,11 +170,10 @@ const lookupShortUrl = (req, res, next) => {
  */
 const redirectToUrl = (req, res) => {  
   const longUrl = (req.invalid) 
-      // ? '/api/shorturl/new'
-      ? '/api/whoami'
+      ? '/api/shorturl/new'
       : req.longUrl;
   
-  console.log(`redirecting to ${`);
+  console.log(`redirecting to ${longUrl}`);
   res.redirect(longUrl);
 };
 
