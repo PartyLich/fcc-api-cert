@@ -87,12 +87,12 @@ app
 
 /** counter for link shortener
  */
-const { getNextId } = require('./modules/idService');
+const { sendNextId } = require('./modules/idService');
 
 app
   .route('/priv/idService/new')
   .get(
-    getNextId
+    sendNextId
   );
 
 
