@@ -32,13 +32,20 @@ const shortUrlSchema = new Schema({
   //   required: true,
   // },
 });
-
 const ShortUrl = mongoose.model('ShortUrl', shortUrlSchema);
+
+const counterSchema = new Schema({
+  count: {
+    type: Number,
+    required: true,
+  }
+});
+const Counter = mongoose.model('Counter', counterSchema);
 
 
 mongoose.connect(process.env.MONGO_URI);
 
-/**
+/** a really poor error 'handler'. maximum airquotes
  * @param {Object} an error object
  */
 const genericErrorHandler = (callback) => (err) => {
@@ -47,6 +54,7 @@ const genericErrorHandler = (callback) => (err) => {
       callback(err);
   };
 
+// http protocol removal. dns lookup fails if we leave it
 const reStripProtocol = /^(http(s)?:\/\/)?(.*)$/i;
 const stripProtocol = (url) => url.match(reStripProtocol)[3];
 
@@ -81,10 +89,11 @@ const getShortUrlObj = (longUrl, shortUrl) => ({
 const createShortUrl = (longUrl) => ShortUrl.create({url: longUrl});
 
 
-/**
+/** Create a new short url if it does not exist.
+ *  return it if it already exists.
  */
 const createOrReturnShortUrl = (req, res, next) => {
-  if(req.invalid) return next();
+  if(req.invalid) return next(new Error('Long url failed validation'));
   console.log(`req.invalid ${req.invalid}`);
   
   const errorHandler = genericErrorHandler(next);
@@ -140,11 +149,12 @@ const sendShortUrl = (req, res) => {
 const lookupShortUrl = (req, res, next) => {
   const userUrlId = req.params.url_id;
   // sanitize
-  const urlId = userUrlId;
+  const urlId = userUrlId;  // TODO: omg this is so dirty. UNCLEAN
   
   ShortUrl.findById(urlId)
     .exec((err, document) => {
-      if(err) { 
+      if(err) {
+        req.invalid = true;
         return next(err);
       }
       
@@ -152,25 +162,17 @@ const lookupShortUrl = (req, res, next) => {
       console.log(`found ${req.longUrl}`);
       return next();
     });
-  //
-// ShortUrl.find({url: req.body.url}, (err, data) => {
-//   if(err) return next();
-//   
-//   
-// });
-  // const shortUrl = ''
-  
-  // next();
 };
 
 /** send redirect to long url
  */
-const redirectToUrl = (req, res) => {
-  // const shortUrl = 'https://fcc-timestamp-microservice-x.glitch.me/'
-  const longUrl = ''
-      + '/api/whoami';
+const redirectToUrl = (req, res) => {  
+  const longUrl = (req.invalid) 
+      // ? '/api/shorturl/new'
+      ? '/api/whoami'
+      : req.longUrl;
   
-  console.log('redirecting');
+  console.log(`redirecting to ${`);
   res.redirect(longUrl);
 };
 
