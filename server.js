@@ -77,6 +77,7 @@ app
       sendShortUrl
    )
   .get((req, res) => res.sendFile(__dirname + '/views/urlShortener.html'));
+
 app
   .route('/api/shorturl/:url_id')
   .get(

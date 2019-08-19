@@ -25,10 +25,10 @@ const shortUrlSchema = new Schema({
     type: String,
     required: true,
   },
-  id: {
-    type: Number,
-    required: true,
-  },
+  // id: {
+  //   type: Number,
+  //   required: true,
+  // },
 });
 
 const ShortUrl = mongoose.model('ShortUrl', shortUrlSchema);
@@ -43,20 +43,18 @@ const stripProtocol = (url) => url.match(reStripProtocol)[3];
 /** validate long url provided by user
  */
 const validateUrl = (req, res, next) => {
-  const longUrl = stripProtocol(req.body.url);
-  // const longUrl = stripProtocol('www.freecodecamp.org');
-  const dns = require('dns');
+  const longUrl = stripProtocol(req.body.url);  
   const dnsPromises = require('dns').promises;
   
   // console.info('longUrl: ' + longUrl);
   dnsPromises.lookup(longUrl)
     .then((data)=> {
-      console.log('lookup success');
+      console.info('dns lookup success');
       req.invalid = false;
       next();
     })
     .catch((err) => {
-      console.info('lookup fail: ' + err.toString());
+      console.log('dns lookup fail: ' + err.toString());
       req.invalid = true;
       next();
     });
@@ -67,7 +65,11 @@ const validateUrl = (req, res, next) => {
 const createShortUrl = (req, res, next) => {
   if(req.invalid) return next();
   console.log(`req.invalid ${req.invalid}`);
-  // ShortUrl.find();
+  // ShortUrl.find({url: req.body.url}, (err, data) => {
+//   if(err) return next();
+//   
+//   
+// });
   
   // const longUrl = req.body.url;
   const longUrl = 'www.google.com';
