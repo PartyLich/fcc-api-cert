@@ -18,6 +18,10 @@ const formatDate = (date) => ({
       unix: date.getTime(),
       utc: date.toUTCString(),
     });
+
+/** create Date object from request path parameter
+ * set req.date field
+ */
 const parseDate = function parseDate(req, res, next) {
   const timeStr = req.params.date_string;  
   let date;
@@ -35,6 +39,9 @@ const parseDate = function parseDate(req, res, next) {
   next();
   return date;
 }
+
+/** send json formatted response
+ */
 const serveTimestamp = (req, res) => {
     const dateResponse = formatDate(req.date);
     res.json(dateResponse);

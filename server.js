@@ -28,6 +28,7 @@ app.get("/api/hello", function (req, res) {
 });
 
 /** Timestamp microservice
+ * /api/timestamp/:date_string?
  * A date string is valid if can be successfully parsed by new Date(date_string) (JS) . 
  * Note that the unix timestamp needs to be an integer (not a string) specifying milliseconds.
  * In our test we will use date strings compliant with ISO-8601 (e.g. "2016-11-20") because this 
@@ -41,38 +42,7 @@ app.get("/api/hello", function (req, res) {
  *  {"unix": null, "utc" : "Invalid Date" }.
  * It is what you get from the date manipulation functions used above.
  */
-const reIso8601 = /^\d{4}-\d{2}-\d{2}$/;
-const reDigits = /^\d*$/;
-const formatDate = (date) => ({
-      unix: date.getTime(),
-      utc: date.toUTCString(),
-    });
-const parseDate = function middleTest(req, res, next) {
-  const timeStr = req.params.date_string;  
-  let date;
-    
-  date = (!timeStr) 
-    ? new Date()
-    : (reIso8601.test(timeStr))
-      ? new Date(timeStr) 
-      : reDigits.test(timeStr) 
-        ? new Date(parseInt(timeStr)) 
-        : new Date('x')
-    ;   
-  
-  req.date = date;
-  next();
-  return date;
-}
-const serveTimestamp = (req, res) => {
-    const dateResponse = formatDate(req.date);
-    res.json(dateResponse);
-    return dateResponse;
-  };
-
-const timeStamp = require('./modules/timeStamp');
-console.log(timeStamp);
-// 
+const {parseDate, serveTimestamp} = require('./modules/timeStamp') 
 
 app.route('/api/timestamp/:date_string?')
   .get(parseDate, serveTimestamp);
@@ -82,16 +52,10 @@ app.route('/api/timestamp/:date_string?')
  * {"ipaddress":"159.20.14.100","language":"en-US,en;q=0.5",
  * "software":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0"}
  */
+const {whoami} = require('./modules/whoami');
+
 app.route('/api/whoami')
-  .get((req, res) => {
-    const whoamiResp = {
-      ipaddress: `${req.ip}`,
-      language: `${req.get('accept-language')}`,
-      software: `${req.get('user-agent')}`,      
-    };
-  
-    res.json(whoamiResp);
-  });
+  .get(whoami);
 
 /** url shortener microservice
  * /api/shorturl/new
@@ -141,6 +105,7 @@ app
 app
   .route('/api/shorturl/:url_id')
   .get(lookupShortUrl, redirectToUrl);
+
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
