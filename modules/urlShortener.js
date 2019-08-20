@@ -28,7 +28,7 @@ const shortUrlSchema = new Schema({
     type: String,
     required: true,
   },
-  id: {
+  id_url: {
     type: Number,
     required: true,
   },
@@ -79,7 +79,7 @@ const getShortUrlObj = (longUrl, shortUrl) => ({
     short_url: shortUrl,
   });
 
-const createShortUrl = (longUrl) => ShortUrl.create({url: longUrl});
+const createShortUrl = (longUrl) => ShortUrl.create({url: longUrl, id_url: getNextId()});
 
 
 /** Create a new short url if it does not exist.
@@ -115,7 +115,7 @@ const createOrReturnShortUrl = (req, res, next) => {
       console.info(`creating new shorturl for ${longUrl}`);
       createShortUrl(longUrl)
           .then((document) => {
-            const shortUrlString = getShortUrlStr(document.id);
+            const shortUrlString = getShortUrlStr(document.id_url);
           
             req.shortUrl = getShortUrlObj(document.url, shortUrlString);
             console.log('new shortUrlObj: ' + JSON.stringify(req.shortUrl));
@@ -144,7 +144,8 @@ const lookupShortUrl = (req, res, next) => {
   // sanitize
   const urlId = userUrlId;  // TODO: omg this is so dirty. UNCLEAN
   
-  ShortUrl.findById(urlId)
+  // ShortUrl.findById(urlId)
+  ShortUrl.findOne(urlId)
     .exec((err, document) => {
       if(err) {
         console.log('findbyId error');

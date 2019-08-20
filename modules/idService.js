@@ -30,33 +30,44 @@ const genericErrorHandler = (callback) => (err) => {
 /** Create a new short url if it does not exist.
  *  return it if it already exists.
  */
-const getNextId = function () {
+const getNextId = function (callback) {
   //const errorHandler = genericErrorHandler(next);
+  
+  return new Promise((reject, resolve) => {
  
-  Counter.findOne({}, (err, doc) => {
-    if(err || !doc) {
-      Counter.create({count: 1})
-        .then((doc) => {
-          const id = doc.count;
-          doc.count++;
-          doc.save();
+    Counter.findOne({}, (err, doc) => {
+      if(err || !doc) {
+        Counter.create({count: 1})
+          .then((doc) => {
+            const id = doc.count;
+            doc.count++;
+            doc.save();
 
-          return id;
-        })
-      .catch((err) => console.log(err));
-      return;
-    }
-    
-    console.log(doc)
-    const id = doc.count;
-    doc.count++;
-    doc.save();
-    
-    return id;
-  });    
+            resolve(id);
+          })
+        .catch((err) => reject(err));
+        // return;
+      } else {
+
+        console.log(doc)
+        const id = doc.count;
+        doc.count++;
+        doc.save();
+
+        resolve(id);
+      }
+    });
+  });
 };
 
-const sendNextId = (req, res) => res.json({id: getNextId()});
+const sendNextId = async function (req, res) => {
+  try {
+  const nextId = await
+  res.json({id: getNextId()})
+  } catch (err) {
+    // 
+  }
+};
 
 
 module.exports = {
