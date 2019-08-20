@@ -80,13 +80,17 @@ const getShortUrlObj = (longUrl, shortUrl) => ({
   });
 
 const createShortUrl = async function (longUrl) {
-  const id_url = await getNextId();
-  console.log(`createShortUrl new id: ${id_url}`);
-  
-  return ShortUrl.create({
-    url: longUrl,
-    id_url
-  });
+  try {
+    const id_url = await getNextId();
+    console.log(`createShortUrl new id: ${id_url}`);
+    
+    return ShortUrl.create({
+      url: longUrl,
+      id_url
+    });
+  } catch(err) {
+    console.log('createShortUrl err ' + err.toString());
+  }  
 };
 
 
@@ -108,29 +112,32 @@ const createOrReturnShortUrl = (req, res, next) => {
       if(exists) {
         console.info(`${longUrl} exists`);
         // return existing shortUrl
-//         const shortUrlDoc = ShortUrl.findOne(query);
-//         // const id = shortUrlDoc._id;
-//         // const shortUrlString = getShortUrlStr(id);
-//         const shortUrlString = getShortUrlStr(shortUrlDoc.id_url);
+        ShortUrl.findOne(query)
+          .exec((err, shortUrlDoc) => {
+            const shortUrlString = getShortUrlStr(shortUrlDoc.id_url);
         
-//         req.shortUrl = getShortUrlObj(shortUrlDoc.url, shortUrlString);
-//         console.log('extant shortUrlObj: ' + JSON.stringify(req.shortUrl));
-//         return next();
-        console.info(`deleting ${longUrl}`);
-        ShortUrl.deleteOne(query);
-      } 
-    
-      console.info(`creating new shorturl for ${longUrl}`);
-      createShortUrl(longUrl)
-          .then((document) => {
-        console.log(document);
-            const shortUrlString = getShortUrlStr(document.id_url);
-          
-            req.shortUrl = getShortUrlObj(document.url, shortUrlString);
-            console.log('new shortUrlObj: ' + JSON.stringify(req.shortUrl));
-            return next();
-          })
-          .catch(errorHandler);
+            req.shortUrl = getShortUrlObj(shortUrlDoc.url, shortUrlString);
+            console.log('extant shortUrlObj: ' + JSON.stringify(req.shortUrl));  
+          });
+        // const id = shortUrlDoc._id;
+        // const shortUrlString = getShortUrlStr(id);
+        
+        return next();
+        // console.info(`deleting ${longUrl}`);
+        // ShortUrl.deleteOne(query);
+      } else {    
+        console.info(`creating new shorturl for ${longUrl}`);
+        createShortUrl(longUrl)
+            .then((document) => {
+          console.log(document);
+              const shortUrlString = getShortUrlStr(document.id_url);
+
+              req.shortUrl = getShortUrlObj(document.url, shortUrlString);
+              console.log('new shortUrlObj: ' + JSON.stringify(req.shortUrl));
+              return next();
+            })
+            .catch(errorHandler);
+      }
     })
     .catch(errorHandler);
 };

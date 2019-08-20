@@ -33,7 +33,7 @@ const genericErrorHandler = (callback) => (err) => {
 const getNextId = function (callback) {
   //const errorHandler = genericErrorHandler(next);
   
-  return new Promise((reject, resolve) => {
+  return new Promise((resolve, reject) => {
  
     Counter.findOne({}, (err, doc) => {
       if(err || !doc) {
@@ -45,7 +45,10 @@ const getNextId = function (callback) {
 
             resolve(id);
           })
-        .catch((err) => reject(err));
+        .catch((err) => {
+          console.log('findOne err');
+          reject(err);
+        });
         // return;
       } else {
 
@@ -58,6 +61,7 @@ const getNextId = function (callback) {
         resolve(id);
       }
     });
+    
   });
 };
 
