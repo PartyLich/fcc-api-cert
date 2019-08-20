@@ -35,6 +35,7 @@ const shortUrlSchema = new Schema({
 });
 const ShortUrl = mongoose.model('ShortUrl', shortUrlSchema);
 
+// ShortUrl.deleteOne({"url":"https://www.freecodecamp.org"});
 
 mongoose.connect(process.env.MONGO_URI);
 
@@ -113,16 +114,16 @@ const createOrReturnShortUrl = (req, res, next) => {
         console.info(`${longUrl} exists`);
         // return existing shortUrl
         ShortUrl.findOne(query)
-          .exec((err, shortUrlDoc) => {
-            const shortUrlString = getShortUrlStr(shortUrlDoc.id_url);
+          .exec((err, doc) => {
+            // console.log(doc);
+            const shortUrlString = getShortUrlStr(doc.id_url);
         
-            req.shortUrl = getShortUrlObj(shortUrlDoc.url, shortUrlString);
+            req.shortUrl = getShortUrlObj(doc.url, shortUrlString);
             console.log('extant shortUrlObj: ' + JSON.stringify(req.shortUrl));  
+          
+            return next();
           });
-        // const id = shortUrlDoc._id;
-        // const shortUrlString = getShortUrlStr(id);
         
-        return next();
         // console.info(`deleting ${longUrl}`);
         // ShortUrl.deleteOne(query);
       } else {    
