@@ -6,13 +6,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
-// url db schema/model
+// counter db schema
 const counterSchema = new Schema({
   count: {
     type: Number,
     required: true,
   }
 });
+// counter db model
 const Counter = mongoose.model('Counter', counterSchema);
 
 
@@ -27,12 +28,13 @@ const genericErrorHandler = (callback) => (err) => {
       callback(err);
   };
 
+
 /** Create a new short url if it does not exist.
  *  return it if it already exists.
+ * @return {Promise} resolves with next id in the sequence
  */
 const getNextId = function (callback) {
-  //const errorHandler = genericErrorHandler(next);
-  
+  //const errorHandler = genericErrorHandler(next);  
   return new Promise((resolve, reject) => {
  
     Counter.findOne({}, (err, doc) => {
@@ -45,13 +47,11 @@ const getNextId = function (callback) {
 
             resolve(id);
           })
-        .catch((err) => {
-          console.log('findOne err');
-          reject(err);
-        });
-        // return;
+          .catch((err) => {
+            console.log('findOne err');
+            reject(err);
+          });
       } else {
-
         console.log('getNextId');
         console.log(doc);
         const id = doc.count;
@@ -65,10 +65,17 @@ const getNextId = function (callback) {
   });
 };
 
+
+/**
+ * @param {object} req  html request obj
+ * @param {object} res  html response obj
+ * @return {string} the id that is sent
+ */
 const sendNextId = async function (req, res) {
   try {
     const id = await getNextId();
     res.json({id})
+    return id;
   } catch (err) {
     // TODO: handle error
   }
