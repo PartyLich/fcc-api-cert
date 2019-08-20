@@ -49,7 +49,8 @@ const getNextId = function (callback) {
         // return;
       } else {
 
-        console.log(doc)
+        console.log('getNextId');
+        console.log(doc);
         const id = doc.count;
         doc.count++;
         doc.save();
@@ -60,12 +61,12 @@ const getNextId = function (callback) {
   });
 };
 
-const sendNextId = async function (req, res) => {
+const sendNextId = async function (req, res) {
   try {
-  const nextId = await
-  res.json({id: getNextId()})
+    const id = await getNextId();
+    res.json({id})
   } catch (err) {
-    // 
+    // TODO: handle error
   }
 };
 

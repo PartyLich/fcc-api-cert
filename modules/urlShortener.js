@@ -79,7 +79,15 @@ const getShortUrlObj = (longUrl, shortUrl) => ({
     short_url: shortUrl,
   });
 
-const createShortUrl = (longUrl) => ShortUrl.create({url: longUrl, id_url: getNextId()});
+const createShortUrl = async function (longUrl) {
+  const id_url = await getNextId();
+  console.log(`createShortUrl new id: ${id_url}`);
+  
+  return ShortUrl.create({
+    url: longUrl,
+    id_url
+  });
+};
 
 
 /** Create a new short url if it does not exist.
@@ -103,7 +111,7 @@ const createOrReturnShortUrl = (req, res, next) => {
 //         const shortUrlDoc = ShortUrl.findOne(query);
 //         // const id = shortUrlDoc._id;
 //         // const shortUrlString = getShortUrlStr(id);
-//         const shortUrlString = getShortUrlStr(shortUrlDoc.id);
+//         const shortUrlString = getShortUrlStr(shortUrlDoc.id_url);
         
 //         req.shortUrl = getShortUrlObj(shortUrlDoc.url, shortUrlString);
 //         console.log('extant shortUrlObj: ' + JSON.stringify(req.shortUrl));
@@ -115,6 +123,7 @@ const createOrReturnShortUrl = (req, res, next) => {
       console.info(`creating new shorturl for ${longUrl}`);
       createShortUrl(longUrl)
           .then((document) => {
+        console.log(document);
             const shortUrlString = getShortUrlStr(document.id_url);
           
             req.shortUrl = getShortUrlObj(document.url, shortUrlString);
@@ -145,7 +154,7 @@ const lookupShortUrl = (req, res, next) => {
   const urlId = userUrlId;  // TODO: omg this is so dirty. UNCLEAN
   
   // ShortUrl.findById(urlId)
-  ShortUrl.findOne(urlId)
+  ShortUrl.findOne({id_url: urlId})
     .exec((err, document) => {
       if(err) {
         console.log('findbyId error');
