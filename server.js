@@ -95,6 +95,25 @@ app
     sendNextId
   );
 
+/** Exercise Tracker
+ */
+// POST /api/exercise/add
+app
+  .route('/api/exercise/add')
+  .post(
+  // lookup user
+  // save exercise
+  // send response
+  );
+// POST /api/exercise/new-user
+app
+  .route('/api/exercise/new-user')
+  .post();
+// get /api/exercise/log?{userId}[&from][&to][&limit]
+app
+  .route('/api/exercise/log?')
+  .get(
+  );
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
