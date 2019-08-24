@@ -96,6 +96,8 @@ app
 
 /** Exercise Tracker
  */
+const Exercise = require('./modules/exercise');
+const exerciseErrorHandler = Exercise.errorHandler;
 // POST /api/exercise/add
 app
   .route('/api/exercise/add')
@@ -118,7 +120,6 @@ app
 
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
 const {lookupUser} = require('./modules/exercise');
-const exerciseErrorHandler = require('./modules/exercise').errorHandler;
 
 app
   .route('/api/exercise/log?')
