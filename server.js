@@ -5,45 +5,42 @@
 const express = require('express');
 const app = express();
 
-// const mongoose = require('mongoose');
-// const Schema = mongoose.Schema;
-
-const bodyParser = require('body-parser');
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
-// so that your API is remotely testable by FCC 
-var cors = require('cors');
 app.use(cors({optionSuccessStatus: 200}));  // some legacy browsers choke on 204
+// so that your API is remotely testable by FCC
+const cors = require('cors');
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
 // body parser middleware
+const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
 
 // http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function (req, res) {
+app.get('/', function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
 
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
+// your first API endpoint...
+app.get('/api/hello', function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
 /** Timestamp microservice
  * /api/timestamp/:date_string?
- * 
- * If the date string is empty it should be equivalent to trigger new Date(), 
+ *
+ * If the date string is empty it should be equivalent to trigger new Date(),
  *  i.e. the service uses the current timestamp.
- * If the date string is valid the api returns a JSON having the structure 
- *  {"unix": <date.getTime()>, "utc" : <date.toUTCString()> } 
+ * If the date string is valid the api returns a JSON having the structure
+ *  {"unix": <date.getTime()>, "utc" : <date.toUTCString()> }
  *  e.g. {"unix": 1479663089000 ,"utc": "Sun, 20 Nov 2016 17:31:29 GMT"}.
- * If the date string is invalid the api returns a JSON having the structure 
+ * If the date string is invalid the api returns a JSON having the structure
  *  {"unix": null, "utc" : "Invalid Date" }
  */
-const {parseDate, serveTimestamp} = require('./modules/timeStamp') 
+const {parseDate, serveTimestamp} = require('./modules/timeStamp');
 
 app.route('/api/timestamp/:date_string?')
   .get(parseDate, serveTimestamp);
@@ -55,7 +52,8 @@ app.route('/api/timestamp/:date_string?')
  */
 const {whoami} = require('./modules/whoami');
 
-app.route('/api/whoami')
+app
+  .route('/api/whoami')
   .get(whoami);
 
 
@@ -119,9 +117,14 @@ app
   );
 
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
+const {lookupUser} = require('./modules/exercise');
+const exerciseErrorHandler = require('./modules/exercise').errorHandler;
+
 app
   .route('/api/exercise/log?')
   .get(
+    lookupUser,
+    exerciseErrorHandler
   );
 
 

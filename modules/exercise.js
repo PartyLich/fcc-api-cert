@@ -5,18 +5,52 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-
-// counter db schema
+// user db schema
 const userSchema = new Schema({
-  user: {
-    name: String,
+  username: {
+    type: String,
     required: true,
-  }
+  },
+  _id: {
+    type: String,
+    required: true,
+  },
 });
-// counter db model
+// user db model
 const User = mongoose.model('User', userSchema);
 
+// exercise schema
+const exerciseSchema = new Schema({
+  username: {
+    // "jane9873",
+    type: String,
+    required: true,
+  },
+  description: {
+    // "jogging",
+    type: String,
+    required: true,
+  },
+  duration: {
+    // 15,
+    type: Number,
+    required: true,
+  },
+  _id: {
+    // "Bk4ury1rH",
+    type: String,
+    required: true,
+  },
+  date: {
+    // "Fri Jul 12 2019"
+    type: Date,
+    required: true,
+  },
+});
+// exercise model
+const Exercise = new mongoose.model('Exercise', exerciseSchema);
 
+// connect to db
 mongoose.connect(process.env.MONGO_URI);
 
 
@@ -24,21 +58,35 @@ mongoose.connect(process.env.MONGO_URI);
  * @param {Object} an error object
  */
 const genericLogError = (callback) => (err) => {
-      // handle database error
-      console.error(err.toString());
-      callback(err);
-  };
+  // handle database error
+  console.error(err.toString());
+  callback(err);
+};
 
-function errorHandler (err, req, res, next) {
+function errorHandler(err, req, res, next) {
   res
     .status(400)
-    .send({ error: err });
+    .send({error: err.message});
 }
 
 
 // POST /api/exercise/add
   // lookup user
-    // res.status(400).json({error: 'unknown _id'});
+const lookupUser = (req, res, next) => {
+  const {userId} = req.body;
+  const USER_NOT_FOUND = 'unknown _id';
+  console.log(`finding user ${userId}`);
+
+  User.exists({id: userId})
+    .then((userExists) =>
+      (userExists)
+          ? next()
+          : next(new Error(USER_NOT_FOUND))
+    )
+    .catch((err) =>
+      genericLogError(err, next)
+    );
+};
 
 // save exercise
 
@@ -56,3 +104,14 @@ function errorHandler (err, req, res, next) {
 
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
 // const getExercise
+
+
+module.exports = {
+  errorHandler,
+
+  // add exercise
+  lookupUser,
+
+  // new user
+
+};
