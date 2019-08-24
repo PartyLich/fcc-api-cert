@@ -124,6 +124,19 @@ const checkExerciseInput = (req, res, next) => {
 };
 
 // send response
+const addExerciseRes = (req, res) => {
+  const {userId, duration, date, description} = req.body;
+  const {username, _id} = req.user;
+  const success = {
+    username,
+    _id,
+    description,
+    duration,
+    date: date.toString(),
+  };
+
+  res.json(success);
+}
 
 
 /** POST /api/exercise/new-user
@@ -157,6 +170,7 @@ module.exports = {
   // add exercise
   lookupUser,
   checkExerciseInput,
+  addExerciseRes,
 
   // new user
   checkNewUserInput,
