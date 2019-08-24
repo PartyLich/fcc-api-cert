@@ -21,11 +21,6 @@ const User = mongoose.model('User', userSchema);
 
 // exercise schema
 const exerciseSchema = new Schema({
-  username: {
-    // "jane9873",
-    type: String,
-    required: true,
-  },
   description: {
     // "jogging",
     type: String,
@@ -70,11 +65,30 @@ function errorHandler(err, req, res, next) {
 }
 
 
+const getUser = (req, res, next) => {
+  const {userId} = req.body;
+
+  User.findOne({_id: userId}, (err, user) => {
+    if(err) return next(err);
+
+    console.log(`got user: ${JSON.stringify(user)}`);
+    req.user = user;
+    next();
+  });
+};
+
+
+const userExists = (query, success, fail) => {
+  User.exists(query)
+    .then(success)
+    .catch(fail);
+}
+
 // POST /api/exercise/add
   // lookup user
 const lookupUser = (req, res, next) => {
   const {userId} = req.body;
-  const USER_NOT_FOUND = 'unknown _id';
+  const USER_NOT_FOUND = 'unknown userId';
   console.log(`finding user ${userId}`);
 
   User.exists({id: userId})
@@ -89,14 +103,57 @@ const lookupUser = (req, res, next) => {
 };
 
 // save exercise
+const inputExists = (input) => input && input == '';
+const inputMissing = (input) => !input || input == '';
+
+const checkExerciseInput = (req, res, next) => {
+  const NO_DURATION = 'Path `duration` is required.';
+  const NO_DESCRIPTION = 'Path `description` is required.'
+  const BAD_DATE = `Cast to Date failed for value "${date}" at path "date"`;
+  const {duration, date, description} = req.body;
+
+  if(inputMissing(duration)) return next(new Error(NO_DURATION));
+  if(inputMissing(description)) return next(new Error(NO_DESCRIPTION));
+  // fill in current date if not provided
+  req.body.date = (inputMissing(date))
+      ? new Date()
+      : new Date(date);
+  return (dateObj == 'Invalid Date')
+      ? next(new Error(BAD_DATE))
+      : next();
+};
 
 // send response
+const addExerciseRes = (req, res) => {
+  const {userId, duration, date, description} = req.body;
+  const {username, _id} = req.user;
+  const success = {
+    username,
+    _id,
+    description,
+    duration,
+    date: date.toString(),
+  };
+
+  res.json(success);
+}
 
 
-// POST /api/exercise/new-user
-  // validate input
-    // res.status(400).json({error: 'Path `username` is required.'});
-    // res.status(400).json({error: 'username already taken'});
+/** POST /api/exercise/new-user
+ */
+// validate input
+const checkNewUserInput = (req, res, next) => {
+  const NAME_MISSING = 'Path `username` is required.'
+  const NAME_TAKEN = 'username already taken';
+  const {username} = req.body;
+
+  if(inputMissing(username)) return next(new Error(NAME_MISSING));
+
+  userExists({username}
+      , (exists) => (exists) ? next(new Error(NAME_TAKEN)) : next()
+      , (err) => genericLogError(err, next));
+};
+
 
   // add user
 
@@ -108,10 +165,14 @@ const lookupUser = (req, res, next) => {
 
 module.exports = {
   errorHandler,
+  getUser,
 
   // add exercise
   lookupUser,
+  checkExerciseInput,
+  addExerciseRes,
 
   // new user
+  checkNewUserInput,
 
 };
