@@ -103,6 +103,25 @@ const lookupUser = (req, res, next) => {
 };
 
 // save exercise
+const inputExists = (input) => input && input == '';
+const inputMissing = (input) => !input || input == '';
+
+const checkExerciseInput = (req, res, next) => {
+  const NO_DURATION = 'Path `duration` is required.';
+  const NO_DESCRIPTION = 'Path `description` is required.'
+  const BAD_DATE = `Cast to Date failed for value "${date}" at path "date"`;
+  const {duration, date, description} = req.body;
+
+  if(inputMissing(duration)) return next(new Error(NO_DURATION));
+  if(inputMissing(description)) return next(new Error(NO_DESCRIPTION));
+  // fill in current date if not provided
+  req.body.date = (inputMissing(date))
+      ? new Date()
+      : new Date(date);
+  return (dateObj == 'Invalid Date')
+      ? next(new Error(BAD_DATE))
+      : next();
+};
 
 // send response
 
@@ -126,6 +145,7 @@ module.exports = {
 
   // add exercise
   lookupUser,
+  checkExerciseInput,
 
   // new user
 
