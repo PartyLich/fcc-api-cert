@@ -20,6 +20,36 @@ const userSchema = new Schema({
 // counter db model
 const User = mongoose.model('User', userSchema);
 
+// exercise schema
+const exerciseSchema = new Schema({
+  username: {
+    // "jane9873",
+    type: String,
+    required: true,
+  },
+  description: {
+    // "jogging",
+    type: String,
+    required: true,
+  },
+  duration: {
+    // 15,
+    type: Number,
+    required: true,
+  },
+  _id: {
+    // "Bk4ury1rH",
+    type: String,
+    required: true,
+  },
+  date: {
+    // "Fri Jul 12 2019"
+    type: Date,
+    required: true,
+  },
+});
+// exercise model
+const Exercise = new mongoose.model('Exercise', exerciseSchema);
 
 mongoose.connect(process.env.MONGO_URI);
 
