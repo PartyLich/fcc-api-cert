@@ -66,7 +66,7 @@ const genericLogError = (callback) => (err) => {
 function errorHandler(err, req, res, next) {
   res
     .status(400)
-    .send({ error: err });
+    .send({error: err.message});
 }
 
 
