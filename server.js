@@ -6,8 +6,6 @@ const express = require('express');
 const app = express();
 
 
-const bodyParser = require('body-parser');
-
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 app.use(cors({optionSuccessStatus: 200}));  // some legacy browsers choke on 204
 // so that your API is remotely testable by FCC
@@ -17,6 +15,7 @@ const cors = require('cors');
 app.use(express.static('public'));
 
 // body parser middleware
+const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
 
 // http://expressjs.com/en/starter/basic-routing.html
