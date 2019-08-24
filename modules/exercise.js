@@ -88,7 +88,7 @@ const userExists = (query, success, fail) => {
   // lookup user
 const lookupUser = (req, res, next) => {
   const {userId} = req.body;
-  const USER_NOT_FOUND = 'unknown _id';
+  const USER_NOT_FOUND = 'unknown userId';
   console.log(`finding user ${userId}`);
 
   User.exists({id: userId})
