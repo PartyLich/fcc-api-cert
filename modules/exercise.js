@@ -126,10 +126,21 @@ const checkExerciseInput = (req, res, next) => {
 // send response
 
 
-// POST /api/exercise/new-user
-  // validate input
-    // res.status(400).json({error: 'Path `username` is required.'});
-    // res.status(400).json({error: 'username already taken'});
+/** POST /api/exercise/new-user
+ */
+// validate input
+const checkNewUserInput = (req, res, next) => {
+  const NAME_MISSING = 'Path `username` is required.'
+  const NAME_TAKEN = 'username already taken';
+  const {username} = req.body;
+
+  if(inputMissing(username)) return next(new Error(NAME_MISSING));
+
+  userExists({username}
+      , (exists) => (exists) ? next(new Error(NAME_TAKEN)) : next()
+      , (err) => genericLogError(err, next));
+};
+
 
   // add user
 
@@ -148,5 +159,6 @@ module.exports = {
   checkExerciseInput,
 
   // new user
+  checkNewUserInput,
 
 };
