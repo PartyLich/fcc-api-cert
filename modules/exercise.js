@@ -58,12 +58,12 @@ mongoose.connect(process.env.MONGO_URI);
  * @param {Object} an error object
  */
 const genericLogError = (callback) => (err) => {
-      // handle database error
-      console.error(err.toString());
-      callback(err);
-  };
+  // handle database error
+  console.error(err.toString());
+  callback(err);
+};
 
-function errorHandler (err, req, res, next) {
+function errorHandler(err, req, res, next) {
   res
     .status(400)
     .send({ error: err });
