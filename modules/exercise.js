@@ -78,6 +78,12 @@ const getUser = (req, res, next) => {
 };
 
 
+const userExists = (query, success, fail) => {
+  User.exists(query)
+    .then(success)
+    .catch(fail);
+}
+
 // POST /api/exercise/add
   // lookup user
 const lookupUser = (req, res, next) => {
