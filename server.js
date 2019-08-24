@@ -115,6 +115,7 @@ app
     // check inputs
     // add user
     // send response
+      // {"username":"bob1236532","_id":"B1yKxW0Nr"}
   );
 
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
