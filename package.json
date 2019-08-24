@@ -1,7 +1,7 @@
 {
-  "name": "fcc-api-projects-boilerplate",
-  "version": "0.0.1",
-  "description": "An FCC Backend Challenge",
+  "name": "fcc-api-projects-implementation",
+  "version": "0.0.3",
+  "description": "Implementation of FCC API cert projects.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
