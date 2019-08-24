@@ -104,3 +104,14 @@ const lookupUser = (req, res, next) => {
 
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
 // const getExercise
+
+
+module.exports = {
+  errorHandler,
+
+  // add exercise
+  lookupUser,
+
+  // new user
+
+};
