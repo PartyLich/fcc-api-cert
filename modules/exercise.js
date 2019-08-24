@@ -5,8 +5,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-
-// counter db schema
+// user db schema
 const userSchema = new Schema({
   username: {
     type: String,
@@ -17,7 +16,7 @@ const userSchema = new Schema({
     required: true,
   },
 });
-// counter db model
+// user db model
 const User = mongoose.model('User', userSchema);
 
 // exercise schema
@@ -51,6 +50,7 @@ const exerciseSchema = new Schema({
 // exercise model
 const Exercise = new mongoose.model('Exercise', exerciseSchema);
 
+// connect to db
 mongoose.connect(process.env.MONGO_URI);
 
 
