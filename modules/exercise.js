@@ -21,11 +21,6 @@ const User = mongoose.model('User', userSchema);
 
 // exercise schema
 const exerciseSchema = new Schema({
-  username: {
-    // "jane9873",
-    type: String,
-    required: true,
-  },
   description: {
     // "jogging",
     type: String,
