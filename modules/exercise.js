@@ -72,7 +72,21 @@ function errorHandler(err, req, res, next) {
 
 // POST /api/exercise/add
   // lookup user
-    // res.status(400).json({error: 'unknown _id'});
+const lookupUser = (req, res, next) => {
+  const {userId} = req.body;
+  const USER_NOT_FOUND = 'unknown _id';
+  console.log(`finding user ${userId}`);
+
+  User.exists({id: userId})
+    .then((userExists) =>
+      (userExists)
+          ? next()
+          : next(new Error(USER_NOT_FOUND))
+    )
+    .catch((err) =>
+      genericLogError(err, next)
+    );
+};
 
 // save exercise
 
