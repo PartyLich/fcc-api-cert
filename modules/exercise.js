@@ -8,10 +8,14 @@ const Schema = mongoose.Schema;
 
 // counter db schema
 const userSchema = new Schema({
-  user: {
-    name: String,
+  username: {
+    type: String,
     required: true,
-  }
+  },
+  _id: {
+    type: String,
+    required: true,
+  },
 });
 // counter db model
 const User = mongoose.model('User', userSchema);
