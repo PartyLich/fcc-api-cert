@@ -65,6 +65,19 @@ function errorHandler(err, req, res, next) {
 }
 
 
+const getUser = (req, res, next) => {
+  const {userId} = req.body;
+
+  User.findOne({_id: userId}, (err, user) => {
+    if(err) return next(err);
+
+    console.log(`got user: ${JSON.stringify(user)}`);
+    req.user = user;
+    next();
+  });
+};
+
+
 // POST /api/exercise/add
   // lookup user
 const lookupUser = (req, res, next) => {
@@ -103,6 +116,7 @@ const lookupUser = (req, res, next) => {
 
 module.exports = {
   errorHandler,
+  getUser,
 
   // add exercise
   lookupUser,
