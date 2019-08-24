@@ -117,9 +117,14 @@ app
   );
 
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
+const {lookupUser} = require('./modules/exercise');
+const exerciseErrorHandler = require('./modules/exercise').errorHandler;
+
 app
   .route('/api/exercise/log?')
   .get(
+    lookupUser,
+    exerciseErrorHandler
   );
 
 
