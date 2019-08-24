@@ -122,7 +122,7 @@ app
 const {lookupUser} = require('./modules/exercise');
 
 app
-  .route('/api/exercise/log?')
+  .route('/api/exercise/log')
   .get(
     lookupUser,
     exerciseErrorHandler
