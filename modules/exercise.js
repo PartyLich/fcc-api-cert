@@ -310,6 +310,14 @@ const getExerciseLog  = (req, res, next) => {
 
   const query = Exercise.find({userId});
 
+  query.select({
+    _id: 0,
+    userId: 1,
+    description: 1,
+    duration: 1,
+    date: 1,
+  });
+
   // Date filter
   if(inputExists(from)) query.where('date').gt(new Date(from));
   if(inputExists(to)) query.where('date').lt(new Date(to));
