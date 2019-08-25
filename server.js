@@ -131,6 +131,7 @@ app
     exerciseErrorHandler
   );
 
+
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
 const {checkLogInput} = Exercise;
 const {getExerciseLog} = Exercise;
