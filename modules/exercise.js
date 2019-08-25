@@ -95,7 +95,7 @@ const lookupUser = (req, res, next) => {
   const USER_NOT_FOUND = 'unknown userId';
   console.log(`finding user ${userId}`);
 
-  User.exists({id: userId})
+  User.exists({_id: userId})
     .then((userExists) =>
       (userExists)
           ? next()
