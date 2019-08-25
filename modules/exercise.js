@@ -66,6 +66,8 @@ function errorHandler(err, req, res, next) {
     .send({error: err.message});
 }
 
+const idRadix = 36;
+const generateId = () => Date.now().toString(idRadix);
 
 const getUser = (req, res, next) => {
   const {userId} = req.body;
