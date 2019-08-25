@@ -135,11 +135,18 @@ app
   );
 
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
+const {checkLogInput} = Exercise;
+const {getExerciseLog} = Exercise;
+const {sendExerciseLogRes} = Exercise;
 
 app
   .route('/api/exercise/log')
   .get(
     lookupUserQuery,
+    checkLogInput,
+    getUserQuery,
+    getExerciseLog,
+    sendExerciseLogRes,
     exerciseErrorHandler
   );
 
