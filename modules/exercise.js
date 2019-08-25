@@ -303,10 +303,28 @@ const getExerciseLog  = (req, res, next) => {
   query.exec((err, docs) => {
     if(err) return next(err);
 
+    console.log(`found exercise log: ${JSON.stringify(docs)}`);
     req.exerciseLog = docs;
     return next();
   })
 }
+
+const sendExerciseLogRes = (req, res) => {
+  const {userId, username} = req.user;
+  const {from, to} = req.query;
+  const {exerciseLog: log} = req;
+  const exerciseLog = {
+    userId,
+    username,
+    count: log.length,
+    log,
+  };
+
+  if(inputExists(from)) exerciseLog.from = from;
+  if(inputExists(to)) exerciseLog.to = to;
+
+  res.json(exerciseLog);
+};
 
 
 module.exports = {
@@ -329,4 +347,5 @@ module.exports = {
   getUserQuery,
   checkLogInput,
   getExerciseLog,
+  sendExerciseLogRes
 };
