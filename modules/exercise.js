@@ -134,7 +134,7 @@ const lookupUser = (req, res, next) => {
 };
 
 // save exercise
-const inputExists = (input) => input && input == '';
+const inputExists = (input) => input && input != '';
 const inputMissing = (input) => !input || input == '';
 
 /**
