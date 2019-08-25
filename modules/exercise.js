@@ -97,8 +97,8 @@ const getUser = (req, res, next) => {
 
 const userExists = (query, success, fail) => {
   User.exists(query)
-    .then(success)
-    .catch(fail);
+      .then(success)
+      .catch(fail);
 };
 
 // POST /api/exercise/add
@@ -148,6 +148,7 @@ const checkExerciseInput = (req, res, next) => {
       : next();
 };
 
+
 /**
  * Save new exercise to database
  * @param  {object}   req  request object
@@ -189,8 +190,8 @@ const addExerciseRes = (req, res) => {
   };
 
   res.json(success);
-
 };
+
 
 /** POST /api/exercise/new-user
  */
@@ -213,6 +214,7 @@ const checkNewUserInput = (req, res, next) => {
       (err) => genericLogError(err, next)
   );
 };
+
 
 /**
  * Create a new user and save them to the database.
@@ -237,6 +239,7 @@ const saveUser = (req, res, next) => {
   });
 };
 
+
 /**
  * Send new user success response
  * @param  {object} req request object
@@ -252,6 +255,7 @@ const newUserRes = (req, res) => {
 
   res.json(user);
 };
+
 
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
 // const getExercise
