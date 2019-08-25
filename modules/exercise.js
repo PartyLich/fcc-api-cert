@@ -99,7 +99,7 @@ const userExists = (query, success, fail) => {
   User.exists(query)
     .then(success)
     .catch(fail);
-}
+};
 
 // POST /api/exercise/add
 // lookup user
@@ -133,7 +133,7 @@ const inputMissing = (input) => !input || input == '';
 const checkExerciseInput = (req, res, next) => {
   const {duration, date, description} = req.body;
   const NO_DURATION = 'Path `duration` is required.';
-  const NO_DESCRIPTION = 'Path `description` is required.'
+  const NO_DESCRIPTION = 'Path `description` is required.';
   const BAD_DATE = `Cast to Date failed for value "${date}" at path "date"`;
 
   if (inputMissing(duration)) return next(new Error(NO_DURATION));
@@ -189,8 +189,8 @@ const addExerciseRes = (req, res) => {
   };
 
   res.json(success);
-}
 
+};
 
 /** POST /api/exercise/new-user
  */
@@ -201,7 +201,7 @@ const addExerciseRes = (req, res) => {
  * @param  {Function} next next handler
  */
 const checkNewUserInput = (req, res, next) => {
-  const NAME_MISSING = 'Path `username` is required.'
+  const NAME_MISSING = 'Path `username` is required.';
   const NAME_TAKEN = 'username already taken';
   const {username} = req.body;
 
