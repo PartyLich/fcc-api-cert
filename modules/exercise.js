@@ -141,7 +141,23 @@ const checkExerciseInput = (req, res, next) => {
       : next();
 };
 
-// send response
+const saveExercise = (req, res, next) => {
+  const {userId, duration, date, description} = req.body;
+  const newExercise = new Exercise({
+    userId,
+    duration,
+    date,
+    description,
+  });
+
+  newExercise.save((err, data) => {
+    return (err)
+      ? next(err)
+      : next();
+  })
+};
+
+
 const addExerciseRes = (req, res) => {
   const {userId, duration, date, description} = req.body;
   const {username, _id} = req.user;
@@ -222,6 +238,7 @@ module.exports = {
   // add exercise
   lookupUser,
   checkExerciseInput,
+  saveExercise,
   addExerciseRes,
 
   // new user
