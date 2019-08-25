@@ -124,6 +124,12 @@ const lookupUser = (req, res, next) => {
 const inputExists = (input) => input && input == '';
 const inputMissing = (input) => !input || input == '';
 
+/**
+ * Validate new exercise inputs. User id is checked earlier in the route.
+ * @param  {object}   req  request object
+ * @param  {object}   res  request object
+ * @param  {Function} next next handler
+ */
 const checkExerciseInput = (req, res, next) => {
   const {duration, date, description} = req.body;
   const NO_DURATION = 'Path `duration` is required.';
@@ -141,6 +147,12 @@ const checkExerciseInput = (req, res, next) => {
       : next();
 };
 
+/**
+ * Save new exercise to database
+ * @param  {object}   req  request object
+ * @param  {object}   res  request object
+ * @param  {Function} next next handler
+ */
 const saveExercise = (req, res, next) => {
   const {userId, duration, date, description} = req.body;
   const newExercise = new Exercise({
@@ -158,6 +170,12 @@ const saveExercise = (req, res, next) => {
 };
 
 
+/**
+ * Send add exercise response
+ * @param  {object}   req  request object
+ * @param  {object}   res  request object
+ * @param  {Function} next next handler
+ */
 const addExerciseRes = (req, res) => {
   const {userId, duration, date, description} = req.body;
   const {username, _id} = req.user;
@@ -175,7 +193,12 @@ const addExerciseRes = (req, res) => {
 
 /** POST /api/exercise/new-user
  */
-// validate input
+/**
+ * Validate new user input
+ * @param  {object}   req  request object
+ * @param  {object}   res  request object
+ * @param  {Function} next next handler
+ */
 const checkNewUserInput = (req, res, next) => {
   const NAME_MISSING = 'Path `username` is required.'
   const NAME_TAKEN = 'username already taken';
