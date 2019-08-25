@@ -12,7 +12,7 @@ const userSchema = new Schema({
     required: true,
     unique: true,
   },
-  _id: {
+  userId: {
     type: String,
     required: true,
     unique: true,
@@ -35,7 +35,7 @@ const exerciseSchema = new Schema({
     type: Number,
     required: true,
   },
-  _id: {
+  userId: {
     // "Bk4ury1rH",
     type: String,
     required: true,
@@ -85,7 +85,7 @@ const generateId = () => Date.now().toString(idRadix);
 const getUser = (req, res, next) => {
   const {userId} = req.body;
 
-  User.findOne({_id: userId}, (err, user) => {
+  User.findOne({userId}, (err, user) => {
     if (err) return next(err);
 
     console.log(`got user: ${JSON.stringify(user)}`);
@@ -121,7 +121,7 @@ const lookupUser = (req, res, next) => {
   const USER_NOT_FOUND = 'unknown userId';
   console.log(`finding user ${userId}`);
 
-  User.exists({_id: userId})
+  User.exists({userId})
     .then((userExists) =>
       (userExists)
           ? next()
@@ -192,11 +192,11 @@ const saveExercise = (req, res, next) => {
  * @param  {Function} next next handler
  */
 const addExerciseRes = (req, res) => {
-  const {userId, duration, date, description} = req.body;
-  const {username, _id} = req.user;
+  const {duration, date, description} = req.body;
+  const {username, userId} = req.user;
   const success = {
     username,
-    _id,
+    userId,
     description,
     duration,
     date: date.toDateString(),
@@ -237,13 +237,13 @@ const checkNewUserInput = (req, res, next) => {
  */
 const saveUser = (req, res, next) => {
   const {username} = req.body;
-  const _id = generateId();
+  const userId = generateId();
   const newUser = new User({
     username,
-    _id,
+    userId,
   });
 
-  req.userId = _id;
+  req.userId = userId;
 
   newUser.save((err, data) => {
     return (err)
@@ -260,9 +260,9 @@ const saveUser = (req, res, next) => {
  */
 const newUserRes = (req, res) => {
   const {username} = req.body;
-  const _id = req.userId;
+  const userId = req.userId;
   const user = {
-    _id,
+    userId,
     username,
   };
 
