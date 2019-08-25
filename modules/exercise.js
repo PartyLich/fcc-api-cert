@@ -186,7 +186,7 @@ const saveExercise = (req, res, next) => {
     return (err)
       ? next(err)
       : next();
-  })
+  });
 };
 
 
@@ -304,27 +304,35 @@ const isInt = (value) => !isNaN(parseInt(value, 10));
  * @param  {object}   res  request object
  * @param  {Function} next next handler
  */
-const getExerciseLog  = (req, res, next) => {
+const getExerciseLog = (req, res, next) => {
   const {from, to, limit} = req.query;
   const {userId} = req.user;
 
   const query = Exercise.find({userId});
 
+  query.select({
+    _id: 0,
+    userId: 1,
+    description: 1,
+    duration: 1,
+    date: 1,
+  });
+
   // Date filter
-  if(inputExists(from)) query.where('date').gt(new Date(from));
-  if(inputExists(to)) query.where('date').lt(new Date(to));
+  if (inputExists(from)) query.where('date').gt(new Date(from));
+  if (inputExists(to)) query.where('date').lt(new Date(to));
 
   // Result limit
-  if(isInt(limit)) query.limit(limit);
+  if (isInt(limit)) query.limit(limit);
 
   query.exec((err, docs) => {
-    if(err) return next(err);
+    if (err) return next(err);
 
     console.log(`found exercise log: ${JSON.stringify(docs)}`);
     req.exerciseLog = docs;
     return next();
-  })
-}
+  });
+};
 
 /**
  * Send successful exercise log response
@@ -343,8 +351,8 @@ const sendExerciseLogRes = (req, res) => {
     log,
   };
 
-  if(inputExists(from)) exerciseLog.from = from;
-  if(inputExists(to)) exerciseLog.to = to;
+  if (inputExists(from)) exerciseLog.from = from;
+  if (inputExists(to)) exerciseLog.to = to;
 
   res.json(exerciseLog);
 };
@@ -370,5 +378,5 @@ module.exports = {
   getUserQuery,
   checkLogInput,
   getExerciseLog,
-  sendExerciseLogRes
+  sendExerciseLogRes,
 };
