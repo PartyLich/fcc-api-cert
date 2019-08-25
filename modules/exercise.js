@@ -101,9 +101,10 @@ const lookupUser = (req, res, next) => {
           ? next()
           : next(new Error(USER_NOT_FOUND))
     )
-    .catch((err) =>
-      genericLogError(err, next)
-    );
+    .catch((err) => {
+      genericLogError(err, next);
+      next(err);
+    });
 };
 
 // save exercise
