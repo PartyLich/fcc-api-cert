@@ -285,6 +285,29 @@ const checkLogInput = (req, res, next) => {
   next();
 };
 
+const isInt = (value) => !isNaN(parseInt(value, 10));
+
+const getExerciseLog  = (req, res, next) => {
+  const {from, to, limit} = req.query;
+  const {userId} = req.user;
+
+  const query = Exercise.find({userId});
+
+  // Date filter
+  if(inputExists(from)) query.where('date').gt(new Date(from));
+  if(inputExists(to)) query.where('date').lt(new Date(to));
+
+  // Result limit
+  if(isInt(limit)) query.limit(limit);
+
+  query.exec((err, docs) => {
+    if(err) return next(err);
+
+    req.exerciseLog = docs;
+    return next();
+  })
+}
+
 
 module.exports = {
   errorHandler,
@@ -305,4 +328,5 @@ module.exports = {
   lookupUserQuery,
   getUserQuery,
   checkLogInput,
+  getExerciseLog,
 };
