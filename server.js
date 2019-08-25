@@ -109,13 +109,20 @@ app
   );
 
 // POST /api/exercise/new-user
+const {checkNewUserInput} = Exercise;
+const {saveUser} = Exercise;
+const {newUserRes} = Exercise;
+
 app
   .route('/api/exercise/new-user')
   .post(
     // check inputs
+    checkNewUserInput,
     // add user
+    saveUser,
     // send response
-      // {"username":"bob1236532","_id":"B1yKxW0Nr"}
+    newUserRes,
+    exerciseErrorHandler
   );
 
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
