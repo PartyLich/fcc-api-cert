@@ -70,8 +70,18 @@ function errorHandler(err, req, res, next) {
 }
 
 const idRadix = 36;
+/**
+ * Generate an id
+ * @return {string} a new id string
+ */
 const generateId = () => Date.now().toString(idRadix);
 
+/**
+ * Get a user from the database and add them to the request object.
+ * @param  {object}   req  request object
+ * @param  {object}   res  response object
+ * @param  {Function} next the next handler to execute
+ */
 const getUser = (req, res, next) => {
   const {userId} = req.body;
 
@@ -92,7 +102,7 @@ const userExists = (query, success, fail) => {
 }
 
 // POST /api/exercise/add
-  // lookup user
+// lookup user
 const lookupUser = (req, res, next) => {
   const {userId} = req.body;
   const USER_NOT_FOUND = 'unknown userId';
@@ -162,6 +172,12 @@ const checkNewUserInput = (req, res, next) => {
       , (err) => genericLogError(err, next));
 };
 
+/**
+ * Create a new user and save them to the database.
+ * @param  {object}   req  request object
+ * @param  {object}   res  request object
+ * @param  {Function} next next handler
+ */
 const saveUser = (req, res, next) => {
   const {username} = req.body;
   const _id = generateId();
@@ -179,6 +195,11 @@ const saveUser = (req, res, next) => {
   });
 };
 
+/**
+ * Send new user success response
+ * @param  {object} req request object
+ * @param  {response} res response object
+ */
 const newUserRes = (req, res) => {
   const {username} = req.body;
   const _id = req.userId;
