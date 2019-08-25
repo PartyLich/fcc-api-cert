@@ -98,7 +98,7 @@ app
  */
 const Exercise = require('./modules/exercise');
 const exerciseErrorHandler = Exercise.errorHandler;
-const {lookupUser} = Exercise;
+const {lookupUserBody, lookupUserQuery} = Exercise;
 const {getUserBody, getUserQuery} = Exercise;
 
 // POST /api/exercise/add
@@ -109,7 +109,7 @@ const {addExerciseRes} = Exercise;
 app
   .route('/api/exercise/add')
   .post(
-    lookupUser,
+    lookupUserBody,
     checkExerciseInput,
     saveExercise,
     getUserBody,
@@ -139,7 +139,7 @@ app
 app
   .route('/api/exercise/log')
   .get(
-    lookupUser,
+    lookupUserQuery,
     exerciseErrorHandler
   );
 

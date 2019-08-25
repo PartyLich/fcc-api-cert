@@ -118,8 +118,8 @@ const userExists = (query, success, fail) => {
  * @param  {object}   res  request object
  * @param  {Function} next next handler
  */
-const lookupUser = (req, res, next) => {
-  const {userId} = req.body;
+const lookupUser = (paramLocation) => (req, res, next) => {
+  const {userId} = req[paramLocation];
   const USER_NOT_FOUND = 'unknown userId';
   console.log(`finding user ${userId}`);
 
@@ -134,6 +134,9 @@ const lookupUser = (req, res, next) => {
       next(err);
     });
 };
+
+const lookupUserBody = lookupUser('body');
+const lookupUserQuery = lookupUser('query');
 
 // save exercise
 const inputExists = (input) => input && input != '';
@@ -280,7 +283,7 @@ module.exports = {
   errorHandler,
 
   // add exercise
-  lookupUser,
+  lookupUserBody,
   getUserBody,
   checkExerciseInput,
   saveExercise,
@@ -292,5 +295,6 @@ module.exports = {
   newUserRes,
 
   // get log
+  lookupUserQuery,
   getUserQuery,
 };
