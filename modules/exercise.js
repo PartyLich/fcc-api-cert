@@ -150,7 +150,7 @@ const addExerciseRes = (req, res) => {
     _id,
     description,
     duration,
-    date: date.toString(),
+    date: date.toDateString(),
   };
 
   res.json(success);
