@@ -86,7 +86,7 @@ const getUser = (req, res, next) => {
   const {userId} = req.body;
 
   User.findOne({_id: userId}, (err, user) => {
-    if(err) return next(err);
+    if (err) return next(err);
 
     console.log(`got user: ${JSON.stringify(user)}`);
     req.user = user;
@@ -136,8 +136,9 @@ const checkExerciseInput = (req, res, next) => {
   const NO_DESCRIPTION = 'Path `description` is required.'
   const BAD_DATE = `Cast to Date failed for value "${date}" at path "date"`;
 
-  if(inputMissing(duration)) return next(new Error(NO_DURATION));
-  if(inputMissing(description)) return next(new Error(NO_DESCRIPTION));
+  if (inputMissing(duration)) return next(new Error(NO_DURATION));
+  if (inputMissing(description)) return next(new Error(NO_DESCRIPTION));
+
   // fill in current date if not provided
   req.body.date = (inputMissing(date))
       ? new Date()
@@ -204,11 +205,13 @@ const checkNewUserInput = (req, res, next) => {
   const NAME_TAKEN = 'username already taken';
   const {username} = req.body;
 
-  if(inputMissing(username)) return next(new Error(NAME_MISSING));
+  if (inputMissing(username)) return next(new Error(NAME_MISSING));
 
-  userExists({username}
-      , (exists) => (exists) ? next(new Error(NAME_TAKEN)) : next()
-      , (err) => genericLogError(err, next));
+  userExists(
+      {username},
+      (exists) => (exists ? next(new Error(NAME_TAKEN)) : next()),
+      (err) => genericLogError(err, next)
+  );
 };
 
 /**
