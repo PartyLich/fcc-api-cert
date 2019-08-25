@@ -18,8 +18,10 @@ const userSchema = new Schema({
     unique: true,
   },
 });
+
 // user db model
 const User = mongoose.model('User', userSchema);
+
 
 // exercise schema
 const exerciseSchema = new Schema({
@@ -44,6 +46,7 @@ const exerciseSchema = new Schema({
     required: true,
   },
 });
+
 // exercise model
 const Exercise = new mongoose.model('Exercise', exerciseSchema);
 
