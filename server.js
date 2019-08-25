@@ -98,6 +98,8 @@ app
  */
 const Exercise = require('./modules/exercise');
 const exerciseErrorHandler = Exercise.errorHandler;
+const {lookupUser} = Exercise;
+
 // POST /api/exercise/add
 app
   .route('/api/exercise/add')
@@ -126,7 +128,6 @@ app
   );
 
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
-const {lookupUser} = require('./modules/exercise');
 
 app
   .route('/api/exercise/log')
