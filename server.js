@@ -98,33 +98,53 @@ app
  */
 const Exercise = require('./modules/exercise');
 const exerciseErrorHandler = Exercise.errorHandler;
+const {lookupUserBody, lookupUserQuery} = Exercise;
+const {getUserBody, getUserQuery} = Exercise;
+
 // POST /api/exercise/add
+const {checkExerciseInput} = Exercise;
+const {saveExercise} = Exercise;
+const {addExerciseRes} = Exercise;
+
 app
   .route('/api/exercise/add')
   .post(
-  // check inputs
-  // lookup user
-  // save exercise
-  // send response
+    lookupUserBody,
+    checkExerciseInput,
+    saveExercise,
+    getUserBody,
+    addExerciseRes,
+    exerciseErrorHandler
   );
 
 // POST /api/exercise/new-user
+const {checkNewUserInput} = Exercise;
+const {saveUser} = Exercise;
+const {newUserRes} = Exercise;
+
 app
   .route('/api/exercise/new-user')
   .post(
-    // check inputs
-    // add user
-    // send response
-      // {"username":"bob1236532","_id":"B1yKxW0Nr"}
+    checkNewUserInput,
+    saveUser,
+    newUserRes,
+    exerciseErrorHandler
   );
 
+
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
-const {lookupUser} = require('./modules/exercise');
+const {checkLogInput} = Exercise;
+const {getExerciseLog} = Exercise;
+const {sendExerciseLogRes} = Exercise;
 
 app
   .route('/api/exercise/log')
   .get(
-    lookupUser,
+    lookupUserQuery,
+    checkLogInput,
+    getUserQuery,
+    getExerciseLog,
+    sendExerciseLogRes,
     exerciseErrorHandler
   );
 
