@@ -276,7 +276,12 @@ const newUserRes = (req, res) => {
 
 
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
-// const getExercise
+/**
+ * Validate input for GET exercise log
+ * @param  {object}   req  request object
+ * @param  {object}   res  request object
+ * @param  {Function} next next handler
+ */
 const checkLogInput = (req, res, next) => {
   const {from, to, limit} = req.query;
 
@@ -285,8 +290,20 @@ const checkLogInput = (req, res, next) => {
   next();
 };
 
+/**
+ * Check if value is parseable to an integer.
+ * @param  {string|number}  value value to check
+ * @return {Boolean}       true if value is parseable to an integer,
+ *    false otherwise
+ */
 const isInt = (value) => !isNaN(parseInt(value, 10));
 
+/**
+ * Get exercise log from database and add it to the request object.
+ * @param  {object}   req  request object
+ * @param  {object}   res  request object
+ * @param  {Function} next next handler
+ */
 const getExerciseLog  = (req, res, next) => {
   const {from, to, limit} = req.query;
   const {userId} = req.user;
@@ -309,6 +326,12 @@ const getExerciseLog  = (req, res, next) => {
   })
 }
 
+/**
+ * Send successful exercise log response
+ * @param  {object}   req  request object
+ * @param  {object}   res  request object
+ * @param  {Function} next next handler
+ */
 const sendExerciseLogRes = (req, res) => {
   const {userId, username} = req.user;
   const {from, to} = req.query;
