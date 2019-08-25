@@ -176,9 +176,16 @@ const saveUser = (req, res, next) => {
   });
 };
 
-  // add user
+const newUserRes = (req, res) => {
+  const {username} = req.body;
+  const _id = req.userId;
+  const user = {
+    _id,
+    username,
+  };
 
-  // send response
+  res.json(user);
+};
 
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
 // const getExercise
@@ -196,5 +203,6 @@ module.exports = {
   // new user
   checkNewUserInput,
   saveUser,
+  newUserRes,
 
 };
