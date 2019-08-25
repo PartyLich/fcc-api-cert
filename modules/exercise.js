@@ -159,6 +159,22 @@ const checkNewUserInput = (req, res, next) => {
       , (err) => genericLogError(err, next));
 };
 
+const saveUser = (req, res, next) => {
+  const {username} = req.body;
+  const _id = generateId();
+  const newUser = new User({
+    username,
+    _id,
+  });
+
+  req.userId = _id;
+
+  newUser.save((err, data) => {
+    return (err)
+      ? next(err)
+      : next();
+  });
+};
 
   // add user
 
@@ -179,5 +195,6 @@ module.exports = {
 
   // new user
   checkNewUserInput,
+  saveUser,
 
 };
