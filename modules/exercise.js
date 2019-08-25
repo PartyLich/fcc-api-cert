@@ -186,7 +186,7 @@ const saveExercise = (req, res, next) => {
     return (err)
       ? next(err)
       : next();
-  })
+  });
 };
 
 
@@ -331,8 +331,8 @@ const getExerciseLog  = (req, res, next) => {
     console.log(`found exercise log: ${JSON.stringify(docs)}`);
     req.exerciseLog = docs;
     return next();
-  })
-}
+  });
+};
 
 /**
  * Send successful exercise log response
@@ -378,5 +378,5 @@ module.exports = {
   getUserQuery,
   checkLogInput,
   getExerciseLog,
-  sendExerciseLogRes
+  sendExerciseLogRes,
 };
