@@ -125,11 +125,8 @@ const {newUserRes} = Exercise;
 app
   .route('/api/exercise/new-user')
   .post(
-    // check inputs
     checkNewUserInput,
-    // add user
     saveUser,
-    // send response
     newUserRes,
     exerciseErrorHandler
   );
