@@ -82,8 +82,8 @@ const generateId = () => Date.now().toString(idRadix);
  * @param  {object}   res  response object
  * @param  {Function} next the next handler to execute
  */
-const getUser = (req, res, next) => {
-  const {userId} = req.body;
+const getUser = (paramLocation) => (req, res, next) => {
+  const {userId} = req[paramLocation];
 
   User.findOne({userId}, (err, user) => {
     if (err) return next(err);
@@ -94,6 +94,8 @@ const getUser = (req, res, next) => {
   });
 };
 
+const getUserBody = getUser('body');
+const getUserQuery = getUser('query');
 
 /**
  * Check if a user exists and execute a success or failure callback.
@@ -276,10 +278,10 @@ const newUserRes = (req, res) => {
 
 module.exports = {
   errorHandler,
-  getUser,
 
   // add exercise
   lookupUser,
+  getUserBody,
   checkExerciseInput,
   saveExercise,
   addExerciseRes,
@@ -289,4 +291,6 @@ module.exports = {
   saveUser,
   newUserRes,
 
+  // get log
+  getUserQuery,
 };
