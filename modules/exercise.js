@@ -10,10 +10,12 @@ const userSchema = new Schema({
   username: {
     type: String,
     required: true,
+    unique: true,
   },
   _id: {
     type: String,
     required: true,
+    unique: true,
   },
 });
 // user db model
