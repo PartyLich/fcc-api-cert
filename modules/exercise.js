@@ -277,6 +277,13 @@ const newUserRes = (req, res) => {
 
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
 // const getExercise
+const checkLogInput = (req, res, next) => {
+  const {from, to, limit} = req.query;
+
+  req.query.limit = parseInt(limit);
+
+  next();
+};
 
 
 module.exports = {
@@ -297,4 +304,5 @@ module.exports = {
   // get log
   lookupUserQuery,
   getUserQuery,
+  checkLogInput,
 };
