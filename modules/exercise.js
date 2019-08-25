@@ -95,6 +95,14 @@ const getUser = (req, res, next) => {
 };
 
 
+/**
+ * Check if a user exists and execute a success or failure callback.
+ * Success will pass a boolean value; true if the query target exists,
+ * false otherwise.
+ * @param  {object} query   a valid mongo query object
+ * @param  {function} success callback to execute if the database check succeeds
+ * @param  {function} fail    error callback
+ */
 const userExists = (query, success, fail) => {
   User.exists(query)
       .then(success)
@@ -102,7 +110,12 @@ const userExists = (query, success, fail) => {
 };
 
 // POST /api/exercise/add
-// lookup user
+/**
+ * Check for user existence in the database.
+ * @param  {object}   req  request object
+ * @param  {object}   res  request object
+ * @param  {Function} next next handler
+ */
 const lookupUser = (req, res, next) => {
   const {userId} = req.body;
   const USER_NOT_FOUND = 'unknown userId';
