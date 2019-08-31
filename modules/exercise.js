@@ -54,8 +54,10 @@ const Exercise = new mongoose.model('Exercise', exerciseSchema);
 mongoose.connect(process.env.MONGO_URI);
 
 
-/** a really poor error 'handler'. maximum airquotes
- * @param {Object} an error object
+/**
+ * a really poor error 'handler'. maximum airquotes
+ * @param {function} callback
+ * @param {Object} err an error object
  */
 const genericLogError = (callback) => (err) => {
   // handle database error
