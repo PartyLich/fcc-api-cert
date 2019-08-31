@@ -40,10 +40,10 @@ app.get('/api/hello', function (req, res) {
  * If the date string is invalid the api returns a JSON having the structure
  *  {"unix": null, "utc" : "Invalid Date" }
  */
-const {parseDate, serveTimestamp} = require('./modules/timeStamp');
+const { timestamp } = require('./modules/timeStamp');
 
 app.route('/api/timestamp/:date_string?')
-  .get(parseDate, serveTimestamp);
+    .get(timestamp);
 
 /** Whoami microservice
  * [base url]/api/whoami

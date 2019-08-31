@@ -49,6 +49,8 @@ const serveTimestamp = (req, res) => {
   };
 
 module.exports = {
-  parseDate,
-  serveTimestamp
+  timestamp: [
+    parseDate,
+    serveTimestamp,
+  ],
 };
