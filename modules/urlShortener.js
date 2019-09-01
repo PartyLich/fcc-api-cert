@@ -53,6 +53,9 @@ const reStripProtocol = /^(http(s)?:\/\/)?(.*)$/i;
 const stripProtocol = (url) => url.match(reStripProtocol)[3];
 
 /** validate long url provided by user
+ * @param  {object}   req  request object
+ * @param  {object}   res  response object
+ * @param {function} next next handler to execute
  */
 const validateUrl = (req, res, next) => {
   const longUrl = stripProtocol(req.body.url);
@@ -80,6 +83,11 @@ const getShortUrlObj = (longUrl, shortUrl) => ({
     short_url: shortUrl,
   });
 
+/**
+ * create a new shorturl object
+ * @param  {string} longUrl full url to shorten
+ * @return {Promise}
+ */
 const createShortUrl = async function (longUrl) {
   try {
     const id_url = await getNextId();
@@ -97,6 +105,9 @@ const createShortUrl = async function (longUrl) {
 
 /** Create a new short url if it does not exist.
  *  return it if it already exists.
+ * @param  {object}   req  request object
+ * @param  {object}   res  response object
+ * @param  {function}  next next handler to execute
  */
 const createOrReturnShortUrl = (req, res, next) => {
   if (req.invalid) return next(new Error('Long url failed validation'));
@@ -144,7 +155,9 @@ const createOrReturnShortUrl = (req, res, next) => {
 };
 
 /** send json response
- */ 
+ * @param  {object}   req  request object
+ * @param  {object}   res  response object
+ */
 const sendShortUrl = (req, res) => {
   const invalidUrl = {'error': 'invalid URL'};
 
@@ -178,6 +191,8 @@ const lookupShortUrl = (req, res, next) => {
 };
 
 /** send redirect to long url
+ * @param  {object}   req  request object
+ * @param  {object}   res  response object
  */
 const redirectToUrl = (req, res) => {
   const longUrl = (req.invalid)

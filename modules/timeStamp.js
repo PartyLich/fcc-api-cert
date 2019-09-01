@@ -21,6 +21,10 @@ const formatDate = (date) => ({
 
 /** create Date object from request path parameter
  * set req.date field
+ * @param  {object}   req  request object
+ * @param  {object}   res  response object
+ * @param  {Function} next the next handler to execute
+ * @return {object} created Date object
  */
 const parseDate = function parseDate(req, res, next) {
   const timeStr = req.params.date_string;
@@ -40,6 +44,9 @@ const parseDate = function parseDate(req, res, next) {
 };
 
 /** send json formatted response
+ * @param  {object}   req  request object
+ * @param  {object}   res  response object
+ * @return {object}
  */
 const serveTimestamp = (req, res) => {
   const dateResponse = formatDate(req.date);

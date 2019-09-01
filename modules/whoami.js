@@ -8,6 +8,9 @@ module.exports = {
 };
 
 /**
+ * @param  {object}   req  request object
+ * @param  {object}   res  response object
+ * @param  {Function} next the next handler to execute
  */
 function whoami(req, res) {
   const whoamiResp = {
