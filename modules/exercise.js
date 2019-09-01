@@ -363,22 +363,28 @@ const sendExerciseLogRes = (req, res) => {
 module.exports = {
   errorHandler,
 
-  // add exercise
-  lookupUserBody,
-  getUserBody,
-  checkExerciseInput,
-  saveExercise,
-  addExerciseRes,
+  addExercise: [
+    lookupUserBody,
+    getUserBody,
+    checkExerciseInput,
+    saveExercise,
+    addExerciseRes,
+    errorHandler,
+  ],
 
-  // new user
-  checkNewUserInput,
-  saveUser,
-  newUserRes,
+  newExerciseUser: [
+    checkNewUserInput,
+    saveUser,
+    newUserRes,
+    errorHandler,
+  ],
 
-  // get log
-  lookupUserQuery,
-  getUserQuery,
-  checkLogInput,
-  getExerciseLog,
-  sendExerciseLogRes,
+  getLog: [
+    lookupUserQuery,
+    checkLogInput,
+    getUserQuery,
+    getExerciseLog,
+    sendExerciseLogRes,
+    errorHandler,
+  ],
 };
