@@ -24,9 +24,8 @@ const formatDate = (date) => ({
  */
 const parseDate = function parseDate(req, res, next) {
   const timeStr = req.params.date_string;
-  let date;
-    
-  date = (!timeStr) 
+
+  const date = (!timeStr)
     ? new Date()
     : (reIso8601.test(timeStr))
       ? new Date(timeStr)
