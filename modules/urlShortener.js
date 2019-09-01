@@ -48,6 +48,12 @@ const genericErrorHandler = (callback) => (err) => {
       callback(err);
   };
 
+function errorHandler(err, req, res, next) {
+  res
+    .status(400)
+    .send({error: err.message});
+}
+
 // http protocol removal. dns lookup fails if we leave it
 const reStripProtocol = /^(http(s)?:\/\/)?(.*)$/i;
 const stripProtocol = (url) => url.match(reStripProtocol)[3];
@@ -65,13 +71,11 @@ const validateUrl = (req, res, next) => {
   dnsPromises.lookup(longUrl)
     .then((data)=> {
       console.info('dns lookup success');
-      req.invalid = false;
       next();
     })
     .catch((err) => {
       console.log('dns lookup fail: ' + err.toString());
-      req.invalid = true;
-      next();
+      next(new Error('Long url failed validation'));
     });
 };
 
@@ -79,9 +83,9 @@ const validateUrl = (req, res, next) => {
 // const getShortUrlStr = (id) => `/api/shorturl/${id}`;
 const getShortUrlStr = (id) => `${id}`;
 const getShortUrlObj = (longUrl, shortUrl) => ({
-    original_url: longUrl,
-    short_url: shortUrl,
-  });
+  original_url: longUrl,
+  short_url: shortUrl,
+});
 
 /**
  * create a new shorturl object
@@ -99,6 +103,7 @@ const createShortUrl = async function (longUrl) {
     });
   } catch (err) {
     console.log('createShortUrl err ' + err.toString());
+    return Promise.reject(new Error('createShortUrl err ' + err.toString()));
   }
 };
 
@@ -110,9 +115,6 @@ const createShortUrl = async function (longUrl) {
  * @param  {function}  next next handler to execute
  */
 const createOrReturnShortUrl = (req, res, next) => {
-  if (req.invalid) return next(new Error('Long url failed validation'));
-  console.log(`req.invalid ${req.invalid}`);
-
   const errorHandler = genericErrorHandler(next);
   const longUrl = req.body.url;
   // const longUrl = 'www.google.com';
@@ -126,6 +128,14 @@ const createOrReturnShortUrl = (req, res, next) => {
         // return existing shortUrl
         ShortUrl.findOne(query)
           .exec((err, doc) => {
+            if (err) {
+              console.log('findbyId error');
+              console.log(err);
+              req.invalid = true;
+              const msg = 'Url exists. Error retrieiving from database';
+              return next(new Error(msg));
+            }
+
             // console.log(doc);
             const shortUrlString = getShortUrlStr(doc.id_url);
 
@@ -179,9 +189,9 @@ const lookupShortUrl = (req, res, next) => {
     .exec((err, document) => {
       if (err) {
         console.log('findbyId error');
+        console.log(err);
         req.invalid = true;
-        // return next(err);
-        return next();
+        return next(new Error('Error locating short url id'));
       }
 
       req.longUrl = document.url;
@@ -209,10 +219,12 @@ module.exports = {
     validateUrl,
     createOrReturnShortUrl,
     sendShortUrl,
+    errorHandler,
   ],
 
   getShortUrl: [
     lookupShortUrl,
     redirectToUrl,
+    errorHandler,
   ],
 };
