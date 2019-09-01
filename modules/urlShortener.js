@@ -146,8 +146,8 @@ const createOrReturnShortUrl = (req, res, next) => {
 /** send json response
  */ 
 const sendShortUrl = (req, res) => {
-  const invalidUrl = {"error":"invalid URL"};
-  
+  const invalidUrl = {'error': 'invalid URL'};
+
   if (req.invalid) res.json(invalidUrl);
   const shortUrl = req.shortUrl;
 
