@@ -4,7 +4,8 @@
   "description": "Implementation of FCC API cert projects.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "start_local": "node -r dotenv/config server.js"
   },
   "dependencies": {
     "express": "^4.12.4",
