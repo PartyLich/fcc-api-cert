@@ -90,12 +90,12 @@ const getShortUrlObj = (longUrl, shortUrl) => ({
  */
 const createShortUrl = async function (longUrl) {
   try {
-    const id_url = await getNextId();
-    console.log(`createShortUrl new id: ${id_url}`);
-    
+    const newId = await getNextId();
+    console.log(`createShortUrl new id: ${newId}`);
+
     return ShortUrl.create({
       url: longUrl,
-      id_url
+      id_url: newId,
     });
   } catch (err) {
     console.log('createShortUrl err ' + err.toString());
