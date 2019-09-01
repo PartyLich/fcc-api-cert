@@ -31,6 +31,16 @@
         "ignoreStrings": true,
         "ignoreTemplateLiterals": true
       }
+    ],
+    "newline-per-chained-call": [
+      "error",
+      {
+        "ignoreChainWithDepth": 2
+      }
+    ],
+    "multiline-ternary": [
+      "error",
+      "always-multiline"
     ]
   }
 }
