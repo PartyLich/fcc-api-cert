@@ -61,26 +61,20 @@ app
  * /api/shorturl/new
  */
 const shortUrl = require('./modules/urlShortener');
-const { validateUrl } = shortUrl;
-const { createOrReturnShortUrl } = shortUrl;
-const { sendShortUrl } = shortUrl;
-const { lookupShortUrl } = shortUrl;
-const { redirectToUrl } = shortUrl;
+const { newShortUrl } = shortUrl;
+const { getShortUrl } = shortUrl;
 
 app
   .route('/api/shorturl/new')
   .post(
-      validateUrl,
-      createOrReturnShortUrl,
-      sendShortUrl
+      newShortUrl
    )
   .get((req, res) => res.sendFile(__dirname + '/views/urlShortener.html'));
 
 app
   .route('/api/shorturl/:url_id')
   .get(
-      lookupShortUrl,
-      redirectToUrl
+      getShortUrl
   );
 
 /** counter for link shortener
