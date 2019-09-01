@@ -37,7 +37,7 @@ const parseDate = function parseDate(req, res, next) {
   req.date = date;
   next();
   return date;
-}
+};
 
 /** send json formatted response
  */
