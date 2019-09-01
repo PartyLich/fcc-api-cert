@@ -83,9 +83,9 @@ const validateUrl = (req, res, next) => {
 // const getShortUrlStr = (id) => `/api/shorturl/${id}`;
 const getShortUrlStr = (id) => `${id}`;
 const getShortUrlObj = (longUrl, shortUrl) => ({
-    original_url: longUrl,
-    short_url: shortUrl,
-  });
+  original_url: longUrl,
+  short_url: shortUrl,
+});
 
 /**
  * create a new shorturl object
