@@ -189,10 +189,14 @@ const redirectToUrl = (req, res) => {
 };
 
 module.exports = {
-  validateUrl,
-  createOrReturnShortUrl,
-  sendShortUrl,
-  
-  lookupShortUrl,
-  redirectToUrl,
-}
+  newShortUrl: [
+    validateUrl,
+    createOrReturnShortUrl,
+    sendShortUrl,
+  ],
+
+  getShortUrl: [
+    lookupShortUrl,
+    redirectToUrl,
+  ],
+};

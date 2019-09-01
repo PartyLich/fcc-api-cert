@@ -40,10 +40,10 @@ app.get('/api/hello', function (req, res) {
  * If the date string is invalid the api returns a JSON having the structure
  *  {"unix": null, "utc" : "Invalid Date" }
  */
-const {parseDate, serveTimestamp} = require('./modules/timeStamp');
+const { timestamp } = require('./modules/timeStamp');
 
 app.route('/api/timestamp/:date_string?')
-  .get(parseDate, serveTimestamp);
+    .get(timestamp);
 
 /** Whoami microservice
  * [base url]/api/whoami
@@ -61,26 +61,20 @@ app
  * /api/shorturl/new
  */
 const shortUrl = require('./modules/urlShortener');
-const { validateUrl } = shortUrl;
-const { createOrReturnShortUrl } = shortUrl;
-const { sendShortUrl } = shortUrl;
-const { lookupShortUrl } = shortUrl;
-const { redirectToUrl } = shortUrl;
+const { newShortUrl } = shortUrl;
+const { getShortUrl } = shortUrl;
 
 app
   .route('/api/shorturl/new')
   .post(
-      validateUrl,
-      createOrReturnShortUrl,
-      sendShortUrl
+      newShortUrl
    )
   .get((req, res) => res.sendFile(__dirname + '/views/urlShortener.html'));
 
 app
   .route('/api/shorturl/:url_id')
   .get(
-      lookupShortUrl,
-      redirectToUrl
+      getShortUrl
   );
 
 /** counter for link shortener
@@ -97,55 +91,33 @@ app
 /** Exercise Tracker
  */
 const Exercise = require('./modules/exercise');
-const exerciseErrorHandler = Exercise.errorHandler;
-const {lookupUserBody, lookupUserQuery} = Exercise;
-const {getUserBody, getUserQuery} = Exercise;
 
 // POST /api/exercise/add
-const {checkExerciseInput} = Exercise;
-const {saveExercise} = Exercise;
-const {addExerciseRes} = Exercise;
+const { addExercise } = Exercise;
 
 app
   .route('/api/exercise/add')
   .post(
-    lookupUserBody,
-    checkExerciseInput,
-    saveExercise,
-    getUserBody,
-    addExerciseRes,
-    exerciseErrorHandler
+    addExercise
   );
 
 // POST /api/exercise/new-user
-const {checkNewUserInput} = Exercise;
-const {saveUser} = Exercise;
-const {newUserRes} = Exercise;
+const { newExerciseUser } = Exercise;
 
 app
   .route('/api/exercise/new-user')
   .post(
-    checkNewUserInput,
-    saveUser,
-    newUserRes,
-    exerciseErrorHandler
+    newExerciseUser
   );
 
 
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
-const {checkLogInput} = Exercise;
-const {getExerciseLog} = Exercise;
-const {sendExerciseLogRes} = Exercise;
+const { getLog } = Exercise;
 
 app
   .route('/api/exercise/log')
   .get(
-    lookupUserQuery,
-    checkLogInput,
-    getUserQuery,
-    getExerciseLog,
-    sendExerciseLogRes,
-    exerciseErrorHandler
+    getLog
   );
 
 
