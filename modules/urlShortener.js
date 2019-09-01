@@ -7,11 +7,11 @@
  [x] create if DNE
  [x] return formatted response
  * 2. If I pass an invalid URL that doesn't follow the
- * http(s)://www.example.com(/more/routes) format, the JSON response will 
+ * http(s)://www.example.com(/more/routes) format, the JSON response will
  * contain an error like {"error":"invalid URL"}
  [x] validates url
  [x] returns proper error if invalid
- * HINT: to be sure that the submitted url points to a valid site you can 
+ * HINT: to be sure that the submitted url points to a valid site you can
  * use the function dns.lookup(host, cb) from the dns core module.
  * 3. When I visit the shortened URL, it will redirect me to my original link.
   [x] retrieve full url
@@ -55,9 +55,9 @@ const stripProtocol = (url) => url.match(reStripProtocol)[3];
 /** validate long url provided by user
  */
 const validateUrl = (req, res, next) => {
-  const longUrl = stripProtocol(req.body.url);  
+  const longUrl = stripProtocol(req.body.url);
   const dnsPromises = require('dns').promises;
-  
+
   // console.info('longUrl: ' + longUrl);
   dnsPromises.lookup(longUrl)
     .then((data)=> {
@@ -89,9 +89,9 @@ const createShortUrl = async function (longUrl) {
       url: longUrl,
       id_url
     });
-  } catch(err) {
+  } catch (err) {
     console.log('createShortUrl err ' + err.toString());
-  }  
+  }
 };
 
 
@@ -99,34 +99,34 @@ const createShortUrl = async function (longUrl) {
  *  return it if it already exists.
  */
 const createOrReturnShortUrl = (req, res, next) => {
-  if(req.invalid) return next(new Error('Long url failed validation'));
+  if (req.invalid) return next(new Error('Long url failed validation'));
   console.log(`req.invalid ${req.invalid}`);
-  
+
   const errorHandler = genericErrorHandler(next);
   const longUrl = req.body.url;
   // const longUrl = 'www.google.com';
-  
+
   // check existence
   const query = {url: longUrl};
   ShortUrl.exists(query)
     .then((exists) => {
-      if(exists) {
+      if (exists) {
         console.info(`${longUrl} exists`);
         // return existing shortUrl
         ShortUrl.findOne(query)
           .exec((err, doc) => {
             // console.log(doc);
             const shortUrlString = getShortUrlStr(doc.id_url);
-        
+
             req.shortUrl = getShortUrlObj(doc.url, shortUrlString);
-            console.log('extant shortUrlObj: ' + JSON.stringify(req.shortUrl));  
-          
+            console.log('extant shortUrlObj: ' + JSON.stringify(req.shortUrl));
+
             return next();
           });
-        
+
         // console.info(`deleting ${longUrl}`);
         // ShortUrl.deleteOne(query);
-      } else {    
+      } else {
         console.info(`creating new shorturl for ${longUrl}`);
         createShortUrl(longUrl)
             .then((document) => {
@@ -148,9 +148,9 @@ const createOrReturnShortUrl = (req, res, next) => {
 const sendShortUrl = (req, res) => {
   const invalidUrl = {"error":"invalid URL"};
   
-  if(req.invalid) res.json(invalidUrl);
+  if (req.invalid) res.json(invalidUrl);
   const shortUrl = req.shortUrl;
-  
+
   console.log(`sending ${JSON.stringify(shortUrl)}`);
   res.json(shortUrl);
 };
@@ -160,17 +160,17 @@ const lookupShortUrl = (req, res, next) => {
   const userUrlId = req.params.url_id;
   // sanitize
   const urlId = userUrlId;  // TODO: omg this is so dirty. UNCLEAN
-  
+
   // ShortUrl.findById(urlId)
   ShortUrl.findOne({id_url: urlId})
     .exec((err, document) => {
-      if(err) {
+      if (err) {
         console.log('findbyId error');
         req.invalid = true;
         // return next(err);
         return next();
       }
-      
+
       req.longUrl = document.url;
       console.log(`lookup found ${req.longUrl}`);
       return next();
@@ -179,14 +179,15 @@ const lookupShortUrl = (req, res, next) => {
 
 /** send redirect to long url
  */
-const redirectToUrl = (req, res) => {  
-  const longUrl = (req.invalid) 
+const redirectToUrl = (req, res) => {
+  const longUrl = (req.invalid)
       ? '/api/shorturl/new'
       : req.longUrl;
-  
+
   console.log(`redirecting to ${longUrl}`);
   res.redirect(longUrl);
 };
+
 
 module.exports = {
   newShortUrl: [

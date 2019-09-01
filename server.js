@@ -43,7 +43,7 @@ app.get('/api/hello', function (req, res) {
 const { timestamp } = require('./modules/timeStamp');
 
 app.route('/api/timestamp/:date_string?')
-    .get(timestamp);
+  .get(timestamp);
 
 /** Whoami microservice
  * [base url]/api/whoami

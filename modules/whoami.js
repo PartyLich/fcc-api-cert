@@ -10,11 +10,11 @@ module.exports = {
 /**
  */
 function whoami(req, res) {
-    const whoamiResp = {
-      ipaddress: `${req.ip}`,
-      language: `${req.get('accept-language')}`,
-      software: `${req.get('user-agent')}`,      
-    };
-  
-    res.json(whoamiResp);
+  const whoamiResp = {
+    ipaddress: `${req.ip}`,
+    language: `${req.get('accept-language')}`,
+    software: `${req.get('user-agent')}`,
+  };
+
+  res.json(whoamiResp);
 }
