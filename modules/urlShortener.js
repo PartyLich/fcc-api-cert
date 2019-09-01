@@ -48,6 +48,12 @@ const genericErrorHandler = (callback) => (err) => {
       callback(err);
   };
 
+function errorHandler(err, req, res, next) {
+  res
+    .status(400)
+    .send({error: err.message});
+}
+
 // http protocol removal. dns lookup fails if we leave it
 const reStripProtocol = /^(http(s)?:\/\/)?(.*)$/i;
 const stripProtocol = (url) => url.match(reStripProtocol)[3];
