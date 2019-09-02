@@ -25,27 +25,8 @@ const {ShortUrl} = require('../models/ShortUrl');
 
 mongoose.connect(process.env.MONGO_URI);
 
+const {genericLogError, errorHandler} = require('./errorHandler');
 
-/** a really poor error 'handler'. maximum airquotes
- * @param {function} callback a callback function to execute
- * @param {Object} an error object
- */
-const genericErrorHandler = (callback) => (err) => {
-  console.error(err.toString());
-  callback(err);
-};
-
-/**
- * @param  {object}   err  an Error object
- * @param  {object}   req  request object
- * @param  {object}   res  response object
- * @param  {Function} next next handler to execute
- */
-function errorHandler(err, req, res, next) {
-  res
-    .status(400)
-    .send({error: err.message});
-}
 
 // http protocol removal. dns lookup fails if we leave it
 const reStripProtocol = /^(http(s)?:\/\/)?(.*)$/i;
@@ -109,7 +90,7 @@ const createShortUrl = async function (longUrl) {
  * @param  {function}  next next handler to execute
  */
 const createOrReturnShortUrl = (req, res, next) => {
-  const errorHandler = genericErrorHandler(next);
+  const errorHandler = genericLogError(next);
   const longUrl = req.body.url;
   // const longUrl = 'www.google.com';
 

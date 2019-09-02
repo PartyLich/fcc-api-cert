@@ -9,23 +9,8 @@ const {Exercise} = require('../models/Exercise');
 // connect to db
 mongoose.connect(process.env.MONGO_URI);
 
+const {genericLogError, errorHandler} = require('./errorHandler');
 
-/**
- * a really poor error 'handler'. maximum airquotes
- * @param {function} callback
- * @param {Object} err an error object
- */
-const genericLogError = (callback) => (err) => {
-  // handle database error
-  console.error(err.toString());
-  callback(err);
-};
-
-function errorHandler(err, req, res, next) {
-  res
-    .status(400)
-    .send({error: err.message});
-}
 
 const idRadix = 36;
 /**
