@@ -1,6 +1,6 @@
 {
   "name": "fcc-api-projects-implementation",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Implementation of FCC API cert projects.",
   "main": "server.js",
   "scripts": {
