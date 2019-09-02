@@ -1,20 +1,11 @@
 /** url shortener microservice
  * /priv/idService/new
- * 
+ *
  */
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-
-// counter db schema
-const counterSchema = new Schema({
-  count: {
-    type: Number,
-    required: true,
-  }
-});
 // counter db model
-const Counter = mongoose.model('Counter', counterSchema);
+const {Counter} = require('../models/Counter');
 
 
 mongoose.connect(process.env.MONGO_URI);
@@ -34,11 +25,11 @@ const genericErrorHandler = (callback) => (err) => {
  * @return {Promise} resolves with next id in the sequence
  */
 const getNextId = function (callback) {
-  //const errorHandler = genericErrorHandler(next);  
+  //const errorHandler = genericErrorHandler(next);
   return new Promise((resolve, reject) => {
- 
+
     Counter.findOne({}, (err, doc) => {
-      if(err || !doc) {
+      if (err || !doc) {
         Counter.create({count: 1})
           .then((doc) => {
             const id = doc.count;
@@ -61,7 +52,6 @@ const getNextId = function (callback) {
         resolve(id);
       }
     });
-    
   });
 };
 
@@ -74,7 +64,7 @@ const getNextId = function (callback) {
 const sendNextId = async function (req, res) {
   try {
     const id = await getNextId();
-    res.json({id})
+    res.json({id});
     return id;
   } catch (err) {
     // TODO: handle error
@@ -85,4 +75,4 @@ const sendNextId = async function (req, res) {
 module.exports = {
   getNextId,
   sendNextId,
-}
+};

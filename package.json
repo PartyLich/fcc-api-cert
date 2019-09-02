@@ -1,10 +1,11 @@
 {
   "name": "fcc-api-projects-implementation",
-  "version": "0.0.3",
+  "version": "0.6.0",
   "description": "Implementation of FCC API cert projects.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "start_local": "node -r dotenv/config server.js"
   },
   "dependencies": {
     "express": "^4.12.4",
@@ -26,5 +27,8 @@
     "express",
     "freecodecamp"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "dotenv": "^8.1.0"
+  }
 }

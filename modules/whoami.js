@@ -5,16 +5,19 @@
  */
 module.exports = {
   whoami,
-}
+};
 
 /**
+ * @param  {object}   req  request object
+ * @param  {object}   res  response object
+ * @param  {Function} next the next handler to execute
  */
 function whoami(req, res) {
-    const whoamiResp = {
-      ipaddress: `${req.ip}`,
-      language: `${req.get('accept-language')}`,
-      software: `${req.get('user-agent')}`,      
-    };
-  
-    res.json(whoamiResp);
+  const whoamiResp = {
+    ipaddress: `${req.ip}`,
+    language: `${req.get('accept-language')}`,
+    software: `${req.get('user-agent')}`,
+  };
+
+  res.json(whoamiResp);
 }
