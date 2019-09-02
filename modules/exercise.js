@@ -3,52 +3,9 @@
  */
 
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-// user db schema
-const userSchema = new Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  userId: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-});
-
-// user db model
-const User = mongoose.model('User', userSchema);
-
-
-// exercise schema
-const exerciseSchema = new Schema({
-  description: {
-    // "jogging",
-    type: String,
-    required: true,
-  },
-  duration: {
-    // 15,
-    type: Number,
-    required: true,
-  },
-  userId: {
-    // "Bk4ury1rH",
-    type: String,
-    required: true,
-  },
-  date: {
-    // "Fri Jul 12 2019"
-    type: Date,
-    required: true,
-  },
-});
-
-// exercise model
-const Exercise = new mongoose.model('Exercise', exerciseSchema);
+const {User} = require('../models/ExerciseUser');
+const {Exercise} = require('../models/Exercise');
 
 // connect to db
 mongoose.connect(process.env.MONGO_URI);
