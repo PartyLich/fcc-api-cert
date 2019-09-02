@@ -17,7 +17,7 @@
   [x] retrieve full url
   [x] redirect
  */
-const { getNextId } = require('../modules/idService');
+const {getNextId} = require('../modules/idService');
 const mongoose = require('mongoose');
 
 // url db model
@@ -25,21 +25,8 @@ const {ShortUrl} = require('../models/ShortUrl');
 
 mongoose.connect(process.env.MONGO_URI);
 
+const {genericLogError, errorHandler} = require('./errorHandler');
 
-/** a really poor error 'handler'. maximum airquotes
- * @param {Object} an error object
- */
-const genericErrorHandler = (callback) => (err) => {
-    // handle database error
-    console.error(err.toString());
-    callback(err);
-  };
-
-function errorHandler(err, req, res, next) {
-  res
-    .status(400)
-    .send({error: err.message});
-}
 
 // http protocol removal. dns lookup fails if we leave it
 const reStripProtocol = /^(http(s)?:\/\/)?(.*)$/i;
@@ -55,15 +42,16 @@ const validateUrl = (req, res, next) => {
   const dnsPromises = require('dns').promises;
 
   // console.info('longUrl: ' + longUrl);
-  dnsPromises.lookup(longUrl)
-    .then((data) => {
-      console.info('dns lookup success');
-      next();
-    })
-    .catch((err) => {
-      console.log('dns lookup fail: ' + err.toString());
-      next(new Error('Long url failed validation'));
-    });
+  dnsPromises
+      .lookup(longUrl)
+      .then((data) => {
+        console.info('dns lookup success');
+        next();
+      })
+      .catch((err) => {
+        console.log('dns lookup fail: ' + err.toString());
+        next(new Error('Long url failed validation'));
+      });
 };
 
 
@@ -102,7 +90,7 @@ const createShortUrl = async function (longUrl) {
  * @param  {function}  next next handler to execute
  */
 const createOrReturnShortUrl = (req, res, next) => {
-  const errorHandler = genericErrorHandler(next);
+  const errorHandler = genericLogError(next);
   const longUrl = req.body.url;
   // const longUrl = 'www.google.com';
 
@@ -156,7 +144,7 @@ const createOrReturnShortUrl = (req, res, next) => {
  * @param  {object}   res  response object
  */
 const sendShortUrl = (req, res) => {
-  const invalidUrl = {'error': 'invalid URL'};
+  const invalidUrl = {error: 'invalid URL'};
 
   if (req.invalid) res.json(invalidUrl);
   const shortUrl = req.shortUrl;
@@ -165,11 +153,17 @@ const sendShortUrl = (req, res) => {
   res.json(shortUrl);
 };
 
-// get short url from database by id
+/**
+ * get short url from database by id
+ * @param  {object}   req  request object
+ * @param  {object}   res  response object
+ * @param  {function}  next next handler to execute
+ */
 const lookupShortUrl = (req, res, next) => {
   const userUrlId = req.params.url_id;
   // sanitize
-  const urlId = userUrlId;  // TODO: omg this is so dirty. UNCLEAN
+  // TODO: omg this is so dirty. UNCLEAN
+  const urlId = userUrlId;
 
   // ShortUrl.findById(urlId)
   ShortUrl.findOne({id_url: urlId})

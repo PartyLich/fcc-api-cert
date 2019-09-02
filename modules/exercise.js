@@ -9,23 +9,8 @@ const {Exercise} = require('../models/Exercise');
 // connect to db
 mongoose.connect(process.env.MONGO_URI);
 
+const {genericLogError, errorHandler} = require('./errorHandler');
 
-/**
- * a really poor error 'handler'. maximum airquotes
- * @param {function} callback
- * @param {Object} err an error object
- */
-const genericLogError = (callback) => (err) => {
-  // handle database error
-  console.error(err.toString());
-  callback(err);
-};
-
-function errorHandler(err, req, res, next) {
-  res
-    .status(400)
-    .send({error: err.message});
-}
 
 const idRadix = 36;
 /**
@@ -36,6 +21,7 @@ const generateId = () => Date.now().toString(idRadix);
 
 /**
  * Get a user from the database and add them to the request object.
+ * @param {string} paramLocation  request object property name
  * @param  {object}   req  request object
  * @param  {object}   res  response object
  * @param  {Function} next the next handler to execute
@@ -72,6 +58,7 @@ const userExists = (query, success, fail) => {
 // POST /api/exercise/add
 /**
  * Check for user existence in the database.
+ * @param {string} paramLocation  request object property name
  * @param  {object}   req  request object
  * @param  {object}   res  request object
  * @param  {Function} next next handler
@@ -82,15 +69,15 @@ const lookupUser = (paramLocation) => (req, res, next) => {
   console.log(`finding user ${userId}`);
 
   User.exists({userId})
-    .then((userExists) =>
-      (userExists)
-          ? next()
-          : next(new Error(USER_NOT_FOUND))
-    )
-    .catch((err) => {
-      genericLogError(err, next);
-      next(err);
-    });
+      .then((userExists) =>
+        (userExists)
+            ? next()
+            : next(new Error(USER_NOT_FOUND))
+      )
+      .catch((err) => {
+        genericLogError(err, next);
+        next(err);
+      });
 };
 
 const lookupUserBody = lookupUser('body');

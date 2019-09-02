@@ -1,8 +1,10 @@
 /** Timestamp microservice
- * A date string is valid if can be successfully parsed by new Date(date_string) (JS) .
- * Note that the unix timestamp needs to be an integer (not a string) specifying milliseconds.
- * In our test we will use date strings compliant with ISO-8601 (e.g. "2016-11-20") because this
- * will ensure an UTC timestamp.
+ * A date string is valid if can be successfully parsed by new Date(date_string)
+ *  (JS) .
+ * Note that the unix timestamp needs to be an integer (not a string) specifying
+ *  milliseconds.
+ * In our test we will use date strings compliant with ISO-8601
+ * (e.g. "2016-11-20") because this will ensure an UTC timestamp.
  * If the date string is empty it should be equivalent to trigger new Date(),
  *  i.e. the service uses the current timestamp.
  * If the date string is valid the api returns a JSON having the structure
