@@ -84,8 +84,8 @@ const lookupUserBody = lookupUser('body');
 const lookupUserQuery = lookupUser('query');
 
 // save exercise
-const inputExists = (input) => input && input != '';
-const inputMissing = (input) => !input || input == '';
+const {inputMissing} = require('../util/validation');
+const {inputExists} = require('../util/validation');
 
 /**
  * Validate new exercise inputs. User id is checked earlier in the route.
