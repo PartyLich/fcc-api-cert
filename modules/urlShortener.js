@@ -17,7 +17,7 @@
   [x] retrieve full url
   [x] redirect
  */
-const { getNextId } = require('../modules/idService');
+const {getNextId} = require('../modules/idService');
 const mongoose = require('mongoose');
 
 // url db model
@@ -31,9 +31,9 @@ mongoose.connect(process.env.MONGO_URI);
  * @param {Object} an error object
  */
 const genericErrorHandler = (callback) => (err) => {
-    console.error(err.toString());
-    callback(err);
-  };
+  console.error(err.toString());
+  callback(err);
+};
 
 /**
  * @param  {object}   err  an Error object
@@ -61,15 +61,16 @@ const validateUrl = (req, res, next) => {
   const dnsPromises = require('dns').promises;
 
   // console.info('longUrl: ' + longUrl);
-  dnsPromises.lookup(longUrl)
-    .then((data) => {
-      console.info('dns lookup success');
-      next();
-    })
-    .catch((err) => {
-      console.log('dns lookup fail: ' + err.toString());
-      next(new Error('Long url failed validation'));
-    });
+  dnsPromises
+      .lookup(longUrl)
+      .then((data) => {
+        console.info('dns lookup success');
+        next();
+      })
+      .catch((err) => {
+        console.log('dns lookup fail: ' + err.toString());
+        next(new Error('Long url failed validation'));
+      });
 };
 
 

@@ -84,15 +84,15 @@ const lookupUser = (paramLocation) => (req, res, next) => {
   console.log(`finding user ${userId}`);
 
   User.exists({userId})
-    .then((userExists) =>
-      (userExists)
-          ? next()
-          : next(new Error(USER_NOT_FOUND))
-    )
-    .catch((err) => {
-      genericLogError(err, next);
-      next(err);
-    });
+      .then((userExists) =>
+        (userExists)
+            ? next()
+            : next(new Error(USER_NOT_FOUND))
+      )
+      .catch((err) => {
+        genericLogError(err, next);
+        next(err);
+      });
 };
 
 const lookupUserBody = lookupUser('body');
