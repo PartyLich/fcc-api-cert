@@ -9,6 +9,7 @@
  * within the JSON response.
  */
 const {errorHandler} = require('./errorHandler');
+const {inputMissing} = require('../util/validation');
 
 
 module.exports = {
@@ -19,13 +20,6 @@ module.exports = {
   ],
 };
 
-
-/**
- * check if {input} exists
- * @param  {*} input
- * @return {boolean}
- */
-const inputMissing = (input) => !input || input == '';
 
 /**
  * Format express-fileupload {file}
