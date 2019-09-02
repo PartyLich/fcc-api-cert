@@ -27,14 +27,20 @@ mongoose.connect(process.env.MONGO_URI);
 
 
 /** a really poor error 'handler'. maximum airquotes
+ * @param {function} callback a callback function to execute
  * @param {Object} an error object
  */
 const genericErrorHandler = (callback) => (err) => {
-    // handle database error
     console.error(err.toString());
     callback(err);
   };
 
+/**
+ * @param  {object}   err  an Error object
+ * @param  {object}   req  request object
+ * @param  {object}   res  response object
+ * @param  {Function} next next handler to execute
+ */
 function errorHandler(err, req, res, next) {
   res
     .status(400)
@@ -165,11 +171,17 @@ const sendShortUrl = (req, res) => {
   res.json(shortUrl);
 };
 
-// get short url from database by id
+/**
+ * get short url from database by id
+ * @param  {object}   req  request object
+ * @param  {object}   res  response object
+ * @param  {function}  next next handler to execute
+ */
 const lookupShortUrl = (req, res, next) => {
   const userUrlId = req.params.url_id;
   // sanitize
-  const urlId = userUrlId;  // TODO: omg this is so dirty. UNCLEAN
+  // TODO: omg this is so dirty. UNCLEAN
+  const urlId = userUrlId;
 
   // ShortUrl.findById(urlId)
   ShortUrl.findOne({id_url: urlId})

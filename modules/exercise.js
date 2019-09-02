@@ -36,6 +36,7 @@ const generateId = () => Date.now().toString(idRadix);
 
 /**
  * Get a user from the database and add them to the request object.
+ * @param {string} paramLocation  request object property name
  * @param  {object}   req  request object
  * @param  {object}   res  response object
  * @param  {Function} next the next handler to execute
@@ -72,6 +73,7 @@ const userExists = (query, success, fail) => {
 // POST /api/exercise/add
 /**
  * Check for user existence in the database.
+ * @param {string} paramLocation  request object property name
  * @param  {object}   req  request object
  * @param  {object}   res  request object
  * @param  {Function} next next handler
