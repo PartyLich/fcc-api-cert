@@ -120,6 +120,18 @@ app
     getLog
   );
 
+// File metadata microservice
+const fileUpload = require('express-fileupload');
+app.use(fileUpload());
+
+const { fileAnalyse } = require('./modules/fileMetadata');
+
+app
+  .route('/api/fileanalyse')
+  .post(
+    fileAnalyse
+  );
+
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function () {
