@@ -31,6 +31,9 @@ const {genericLogError, errorHandler} = require('./errorHandler');
 // http protocol removal. dns lookup fails if we leave it
 const reStripProtocol = /^(http(s)?:\/\/)?(.*)$/i;
 const stripProtocol = (url) => url.match(reStripProtocol)[3];
+const addProtocol = (url) => url.match(reStripProtocol)[1]
+    ? url
+    : `http://${url}`;
 
 /** validate long url provided by user
  * @param  {object}   req  request object
@@ -186,12 +189,10 @@ const lookupShortUrl = (req, res, next) => {
  * @param  {object}   res  response object
  */
 const redirectToUrl = (req, res) => {
-  const longUrl = (req.invalid)
-      ? '/api/shorturl/new'
-      : req.longUrl;
+  const {longUrl} = req;
 
-  console.log(`redirecting to ${longUrl}`);
-  res.redirect(longUrl);
+  console.log(`redirecting to ${addProtocol(longUrl)}`);
+  res.redirect(addProtocol(longUrl));
 };
 
 
