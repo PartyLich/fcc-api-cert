@@ -10,22 +10,12 @@ const {Counter} = require('../models/Counter');
 
 mongoose.connect(process.env.MONGO_URI);
 
-/** a really poor error 'handler'. maximum airquotes
- * @param {Object} an error object
- */
-const genericErrorHandler = (callback) => (err) => {
-      // handle database error
-      console.error(err.toString());
-      callback(err);
-  };
-
 
 /** Create a new short url if it does not exist.
  *  return it if it already exists.
  * @return {Promise} resolves with next id in the sequence
  */
 const getNextId = function (callback) {
-  //const errorHandler = genericErrorHandler(next);
   return new Promise((resolve, reject) => {
 
     Counter.findOne({}, (err, doc) => {
