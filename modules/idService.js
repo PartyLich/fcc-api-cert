@@ -64,7 +64,7 @@ const getNextId = function (callback) {
 const sendNextId = async function (req, res) {
   try {
     const id = await getNextId();
-    res.json({id})
+    res.json({id});
     return id;
   } catch (err) {
     // TODO: handle error
@@ -75,4 +75,4 @@ const sendNextId = async function (req, res) {
 module.exports = {
   getNextId,
   sendNextId,
-}
+};
