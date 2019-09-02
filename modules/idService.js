@@ -1,6 +1,6 @@
 /** url shortener microservice
  * /priv/idService/new
- * 
+ *
  */
 const mongoose = require('mongoose');
 
@@ -25,11 +25,11 @@ const genericErrorHandler = (callback) => (err) => {
  * @return {Promise} resolves with next id in the sequence
  */
 const getNextId = function (callback) {
-  //const errorHandler = genericErrorHandler(next);  
+  //const errorHandler = genericErrorHandler(next);
   return new Promise((resolve, reject) => {
- 
+
     Counter.findOne({}, (err, doc) => {
-      if(err || !doc) {
+      if (err || !doc) {
         Counter.create({count: 1})
           .then((doc) => {
             const id = doc.count;
@@ -52,7 +52,6 @@ const getNextId = function (callback) {
         resolve(id);
       }
     });
-    
   });
 };
 

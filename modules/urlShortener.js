@@ -25,13 +25,14 @@ const {ShortUrl} = require('../models/ShortUrl');
 
 mongoose.connect(process.env.MONGO_URI);
 
+
 /** a really poor error 'handler'. maximum airquotes
  * @param {Object} an error object
  */
 const genericErrorHandler = (callback) => (err) => {
-      // handle database error
-      console.error(err.toString());
-      callback(err);
+    // handle database error
+    console.error(err.toString());
+    callback(err);
   };
 
 function errorHandler(err, req, res, next) {
@@ -55,7 +56,7 @@ const validateUrl = (req, res, next) => {
 
   // console.info('longUrl: ' + longUrl);
   dnsPromises.lookup(longUrl)
-    .then((data)=> {
+    .then((data) => {
       console.info('dns lookup success');
       next();
     })

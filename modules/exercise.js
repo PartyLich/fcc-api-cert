@@ -1,7 +1,6 @@
 /**
  * Apis and Microservices Projects - Exercise Tracker
  */
-
 const mongoose = require('mongoose');
 
 const {User} = require('../models/ExerciseUser');
