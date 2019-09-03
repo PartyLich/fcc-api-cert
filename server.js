@@ -31,14 +31,6 @@ app.get('/api/hello', function (req, res) {
 
 /** Timestamp microservice
  * /api/timestamp/:date_string?
- *
- * If the date string is empty it should be equivalent to trigger new Date(),
- *  i.e. the service uses the current timestamp.
- * If the date string is valid the api returns a JSON having the structure
- *  {"unix": <date.getTime()>, "utc" : <date.toUTCString()> }
- *  e.g. {"unix": 1479663089000 ,"utc": "Sun, 20 Nov 2016 17:31:29 GMT"}.
- * If the date string is invalid the api returns a JSON having the structure
- *  {"unix": null, "utc" : "Invalid Date" }
  */
 const { timestamp } = require('./modules/timeStamp');
 
@@ -47,8 +39,6 @@ app.route('/api/timestamp/:date_string?')
 
 /** Whoami microservice
  * [base url]/api/whoami
- * {"ipaddress":"159.20.14.100","language":"en-US,en;q=0.5",
- * "software":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0"}
  */
 const {whoami} = require('./modules/whoami');
 
