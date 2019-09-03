@@ -2,26 +2,17 @@
 
 Originally started on glitch. The commit logs from glitch are automated and not particularly useful. The human commits should be a bit better.
 
-# API Project: Timestamp Microservice for FCC
-
-### User stories :
-
-1. The API endpoint is `GET [project_url]/api/timestamp/:date_string?`
-2. A date string is valid if can be successfully parsed by `new Date(date_string)` (JS) . Note that the unix timestamp needs to be an **integer** (not a string) specifying **milliseconds**. In our test we will use date strings compliant with ISO-8601 (e.g. `"2016-11-20"`) because this will ensure an UTC timestamp.
-3. If the date string is **empty** it should be equivalent to trigger `new Date()`, i.e. the service uses the current timestamp.
-4. If the date string is **valid** the api returns a JSON having the structure
-`{"unix": <date.getTime()>, "utc" : <date.toUTCString()> }`
-e.g. `{"unix": 1479663089000 ,"utc": "Sun, 20 Nov 2016 17:31:29 GMT"}`.
-5. If the date string is **invalid** the api returns a JSON having the structure `{"unix": null, "utc" : "Invalid Date" }`. It is what you get from the date manipulation functions used above.
-
-#### Example usage:
-* [https://curse-arrow.hyperdev.space/api/timestamp/2015-12-15](https://curse-arrow.hyperdev.space/api/timestamp/2015-12-15)
-* [https://curse-arrow.hyperdev.space/api/timestamp/1450137600000](https://curse-arrow.hyperdev.space/api/timestamp/1450137600000)
-
-#### Example output:
-* { "unix": 1450137600, "natural": "December 15, 2015" }
+live version at [this url](https://fcc-api-microservice-x.glitch.me)
 
 
-# Apis and Microservices Projects - Exercise Tracker
-
-* Build a full stack JavaScript app that is functionally similar to this: [https://fuschia-custard.glitch.me/](https://fuschia-custard.glitch.me/).
+# API Projects
+## Timestamp Microservice for FCC
+[Description](https://learn.freecodecamp.org/apis-and-microservices/apis-and-microservices-projects/timestamp-microservice)
+## Request Header Parser Microservice
+[Description](https://learn.freecodecamp.org/apis-and-microservices/apis-and-microservices-projects/request-header-parser-microservice)
+## URL Shortener Microservice
+[Description](https://learn.freecodecamp.org/apis-and-microservices/apis-and-microservices-projects/url-shortener-microservice)
+## Exercise Tracker
+[Description](https://learn.freecodecamp.org/apis-and-microservices/apis-and-microservices-projects/exercise-tracker)
+## File Metadata Microservice
+[description](https://learn.freecodecamp.org/apis-and-microservices/apis-and-microservices-projects/file-metadata-microservice)
