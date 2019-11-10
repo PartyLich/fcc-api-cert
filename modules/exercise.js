@@ -214,6 +214,7 @@ const newUserRes = (req, res) => {
   const user = {
     userId,
     username,
+    _id: userId,
   };
 
   res.json(user);
