@@ -100,6 +100,14 @@ app
     newExerciseUser
   );
 
+// GET api/exercise/users
+const { allUsers } = Exercise;
+
+app
+  .route('/api/exercise/users')
+  .get(
+    allUsers
+  );
 
 // GET /api/exercise/log?{userId}[&from][&to][&limit]
 const { getLog } = Exercise;

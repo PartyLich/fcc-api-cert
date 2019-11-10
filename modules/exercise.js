@@ -303,6 +303,32 @@ const sendExerciseLogRes = (req, res) => {
   res.json(exerciseLog);
 };
 
+/**
+ * Get a user from the database and add them to the request object.
+ * @param  {object}   req  request object
+ * @param  {object}   res  response object
+ * @param  {Function} next the next handler to execute
+ */
+const getAllUsers = (req, res, next) => {
+  User.find({}, (err, users) => {
+    if (err) return next(err);
+
+    console.log(`got users: ${JSON.stringify(users)}`);
+    req.users = users;
+    next();
+  });
+};
+
+/**
+ * Send successful all users response
+ * @param  {object}   req  request object
+ * @param  {object}   res  request object
+ * @param  {Function} next next handler
+ */
+const allUsersRes = (req, res) => {
+  res.json(req.users);
+}
+
 
 module.exports = {
   errorHandler,
@@ -331,4 +357,10 @@ module.exports = {
     sendExerciseLogRes,
     errorHandler,
   ],
+
+  allUsers: [
+    getAllUsers,
+    allUsersRes,
+    errorHandler,
+  ]
 };
