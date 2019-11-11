@@ -30,17 +30,21 @@ const formatDate = (date) => ({
  */
 const parseDate = function parseDate(req, res, next) {
   const timeStr = req.params.date_string;
+  if (!timeStr) {
+    req.date = new Date();
+    next();
+    return req.date;
+  }
 
-  const date = (!timeStr)
-    ? new Date()
-    : (reIso8601.test(timeStr))
-      ? new Date(timeStr)
-      : reDigits.test(timeStr)
-        ? new Date(parseInt(timeStr))
-        : new Date('x')
-    ;
+  if (reIso8601.test(timeStr)) {
+    req.date = new Date(timeStr);
+  } else if (reDigits.test(timeStr)) {
+    req.date = new Date(parseInt(timeStr));
+  } else {
+    req.date = new Date('x');
+  }
 
-  req.date = date;
+  const date = req.date;
   next();
   return date;
 };
